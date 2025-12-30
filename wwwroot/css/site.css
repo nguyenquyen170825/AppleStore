@@ -1,0 +1,71 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/*header*/
+.header{
+  display: flex;
+  padding: 0rem 2rem ;
+  background-color: rgba(195, 212, 175, 0);
+  width: 100%;
+  height: 60px;
+  align-items: center;
+}
+.header a{
+  color:black;
+  text-decoration: none;
+}
+.nav-menu{
+  background-color:rgba(202, 214, 214, 0.479);
+  width: 25%;
+  height: 2.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;;
+  margin:0rem 2rem 0rem 8rem;
+  padding:0rem 1rem;
+  border-radius: 10px;
+}
+.nav-search{
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+  border-radius: 5px; 
+  background-color: white; 
+  width: 18.5rem;
+
+}
+.nav-search .fa-magnifying-glass {
+  position: absolute;
+  left: 10px; 
+  color: #888;  
+  z-index: 1; 
+}
+.nav-search input{
+  width: 18.5rem;
+  text-align: left; 
+  border-radius: 10px; 
+  border-color: rgb(255, 255, 255);
+  padding-left: 2rem; 
+  height: 2.3rem; 
+  outline: none;
+  border: 1px solid #ccc;
+}
