@@ -1,0 +1,21 @@
+
+.main-ads{
+    width: 100%;
+    height: 70vh;
+    background-color: #031b41;
+    display: flex;;
+}
+.main-ads-content{
+    
+    flex:1;
+    color:white
+}
+.main-ads-img{
+    flex: 1;
+    height: 100%;
+    background-image: url(/image/va393xgrb-removebg-preview.png);
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+}
