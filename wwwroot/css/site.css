@@ -69,3 +69,9 @@ body {
   outline: none;
   border: 1px solid #ccc;
 }
+.nav-individual{
+  background-color: red;
+  width: 11rem;
+  height: 2.3rem; 
+  margin-left: 5rem;
+}
