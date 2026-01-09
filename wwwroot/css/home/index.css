@@ -63,9 +63,16 @@
     width: 30%;
     height: 100%;
     background-color: greenyellow;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
 }
-.flashsale-centent-right{
+.flashsale-content-right{
     width: 35%;
     height: 100%;
-    background-color: rgb(53, 151, 83);
+    background-color: rgb(27, 175, 71);
+    text-align: center;
+    align-items: center;
 }
+
