@@ -1,4 +1,6 @@
-
+body{
+    color: white;
+}
 .ads{
     width: 100%;
     height: 89vh;
@@ -44,6 +46,7 @@
     width: 100%;
     height: 60vh;
     border-radius: 10px;
+    color: white;
 }
 .flashsale-content{
     display: flex;
@@ -54,7 +57,7 @@
 .flashsale-content-left{
     height: 100%;
     width: 35%;
-    background-color: red;
+    /* background-color: red; */
     background-image: url(/image/flashsale.png); 
     background-size: contain;
     background-repeat: no-repeat;
@@ -62,17 +65,79 @@
 .flashsale-content-center{
     width: 30%;
     height: 100%;
-    background-color: greenyellow;
+    /* background-color: greenyellow; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; 
 }
+.time span{
+    display: inline-block;   /* QUAN TRỌNG */
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #929191;
+    color: white;
+    margin: 0 5px;
+    border-radius: 6px;
+}
+
 .flashsale-content-right{
     width: 35%;
     height: 100%;
-    background-color: rgb(27, 175, 71);
+    /* background-color: rgb(27, 175, 71); */
     text-align: center;
     align-items: center;
 }
+.flashsale-product{
+    background-color: white;
+    height: 75%;
+    border-radius: 10px;
+}
 
+.best-product{
+    background: rgb(0, 0, 0);
+    margin-top: 5rem;
+    width: 100%;
+    height: 60vh;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    
+}
+.best-product-content{
+    flex: 1;
+    background-color: rgb(15, 105, 93);
+    border-radius: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.best-product-sp{
+    flex: 3;
+    background-color: white;
+    border-radius: 10px;
+}
+.new-product{
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    height: 110vh;
+    background-color: red;
+    border-radius: 10px;
+}
+.new-product-content{
+    flex: 1.5;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.new-product-sp{
+    flex: 8.5;
+    background-color: white;
+    border-radius: 10px;
+}
