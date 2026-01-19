@@ -32,7 +32,12 @@
             <p></p>
         </div>
     </div>
-    <div class="flashsale-product">
+    <div id="flashSaleContainer">
+        <i class="fa-solid fa-chevron-left flashsale-arrow left-arrow"></i>
+        <div id="flashSaleProducts">
+            <!-- Product cards will be rendered here -->
+        </div>
+        <i class="fa-solid fa-chevron-right flashsale-arrow right-arrow"></i>
         
     </div>
 </div>
@@ -56,4 +61,5 @@
 
 @section Scripts{
     <script src="~/js/countdown.js" asp-append-version="true"></script>
+    <script src="~/js/flashsale.js" asp-append-version="true"></script>
 }
