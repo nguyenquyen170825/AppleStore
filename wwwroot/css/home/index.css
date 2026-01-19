@@ -1,4 +1,6 @@
-
+body{
+    color: white;
+}
 .ads{
     width: 100%;
     height: 89vh;
@@ -42,19 +44,21 @@
 .flashsale{
     background: rgb(0, 0, 0);
     width: 100%;
-    height: 60vh;
+    height: 80vh;
     border-radius: 10px;
+    color: white;
+    margin-bottom: 0rem;
 }
 .flashsale-content{
     display: flex;
-    height: 25%;
+    height: 20%;
     width: 100%;
     /* background-color: aqua; */
 }
 .flashsale-content-left{
     height: 100%;
     width: 35%;
-    background-color: red;
+    /* background-color: red; */
     background-image: url(/image/flashsale.png); 
     background-size: contain;
     background-repeat: no-repeat;
@@ -62,17 +66,140 @@
 .flashsale-content-center{
     width: 30%;
     height: 100%;
-    background-color: greenyellow;
+    /* background-color: greenyellow; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; 
 }
+.time span{
+    display: inline-block;   /* QUAN TRỌNG */
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #929191;
+    color: white;
+    margin: 0 5px;
+    border-radius: 6px;
+}
+
 .flashsale-content-right{
     width: 35%;
     height: 100%;
-    background-color: rgb(27, 175, 71);
+    /* background-color: rgb(27, 175, 71); */
     text-align: center;
     align-items: center;
 }
+#flashSaleContainer{
+    background-color: rgb(180, 27, 27);
+    height:  80%;
+    border-radius: 10px;
+    display: flex;
+    width: 100%;
+    position: relative; 
+    align-items: center; 
+}
 
+#flashSaleProducts {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth; /* Cuộn mượt mà */
+    flex-grow: 1; /* Cho phép chiếm hết không gian còn lại */
+    height: 100%; /* Đảm bảo chiếm toàn bộ chiều cao của cha */
+    align-items: center; /* Căn giữa các thẻ sản phẩm theo chiều dọc */
+    scrollbar-width: none;  /* Ẩn thanh cuộn trên Firefox */
+    padding: 0 20px; /* Thêm padding để tạo khoảng trống từ mũi tên */
+    gap: 20px; /* Thêm khoảng cách giữa các thẻ sản phẩm */
+}
+
+.product-card{
+    color: black;
+    background-color: white; 
+    border-radius: 10px;
+    height: 97%;
+    width: 22%;
+    min-width: 250px; /* Đảm bảo thẻ sản phẩm có kích thước tối thiểu */
+    /* margin: auto 10px; */ /* Bỏ margin ngang vì đã dùng gap */
+    flex-shrink: 0;
+}
+.product-card img{
+    width: 200px ;
+    height: 200px ;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+/* CSS cho mũi tên chuyển sản phẩm */
+.flashsale-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5em; 
+    color: white; 
+    cursor: pointer;
+    z-index: 10; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.flashsale-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+.best-product{
+    background: rgb(0, 0, 0);
+    margin-top: 8rem;
+    width: 100%;
+    height: 60vh;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    
+}
+.best-product-content{
+    flex: 1;
+    background-color: rgb(15, 105, 93);
+    border-radius: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.best-product-sp{
+    flex: 3;
+    background-color: white;
+    border-radius: 10px;
+}
+.new-product{
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    height: 110vh;
+    background-color: red;
+    border-radius: 10px;
+}
+.new-product-content{
+    flex: 1.5;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.new-product-sp{
+    flex: 8.5;
+    background-color: white;
+    border-radius: 10px;
+}
