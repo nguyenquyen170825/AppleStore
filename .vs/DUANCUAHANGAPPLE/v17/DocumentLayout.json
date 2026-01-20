@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\",
+  "WorkspaceRootPath": "C:\\Users\\Tiep\\AppleStore\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|d:\\l\u1EADp tr\u00ECnh web n\u00E2ng cao\\duancuahangapple\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|c:\\users\\tiep\\applestore\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|d:\\l\u1EADp tr\u00ECnh web n\u00E2ng cao\\duancuahangapple\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|c:\\users\\tiep\\applestore\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|d:\\l\u1EADp tr\u00ECnh web n\u00E2ng cao\\duancuahangapple\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|c:\\users\\tiep\\applestore\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|solutionrelative:views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|d:\\l\u1EADp tr\u00ECnh web n\u00E2ng cao\\duancuahangapple\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|c:\\users\\tiep\\applestore\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C8F25319-926C-45D8-8066-C719753D7782}|DUANCUAHANGAPPLE.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
@@ -36,24 +36,23 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Privacy.cshtml",
-              "DocumentMoniker": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Home\\Privacy.cshtml",
+              "DocumentMoniker": "C:\\Users\\Tiep\\AppleStore\\Views\\Home\\Privacy.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
-              "ToolTip": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Home\\Privacy.cshtml",
+              "ToolTip": "C:\\Users\\Tiep\\AppleStore\\Views\\Home\\Privacy.cshtml",
               "RelativeToolTip": "Views\\Home\\Privacy.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-25T04:36:18.815Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-25T04:36:18.815Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Controllers\\HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Tiep\\AppleStore\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Tiep\\AppleStore\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAmwBYAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-25T03:29:35.675Z",
               "EditorCaption": ""
@@ -62,27 +61,25 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "_Layout.cshtml",
-              "DocumentMoniker": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Shared\\_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Tiep\\AppleStore\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Tiep\\AppleStore\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-24T06:22:40.541Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-24T06:22:40.541Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Home\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Tiep\\AppleStore\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\L\u1EACP TR\u00CCNH WEB N\u00C2NG CAO\\DUANCUAHANGAPPLE\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Tiep\\AppleStore\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-22T14:43:21.246Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-22T14:43:21.246Z"
             }
           ]
         },

@@ -27,3 +27,36 @@ D:\LẬP TRÌNH WEB NÂNG CAO\DUANCUAHANGAPPLE\obj\Debug\net8.0\DUANCUAHANGAPPLE
 D:\LẬP TRÌNH WEB NÂNG CAO\DUANCUAHANGAPPLE\obj\Debug\net8.0\DUANCUAHANGAPPLE.genruntimeconfig.cache
 D:\LẬP TRÌNH WEB NÂNG CAO\DUANCUAHANGAPPLE\obj\Debug\net8.0\ref\DUANCUAHANGAPPLE.dll
 D:\LẬP TRÌNH WEB NÂNG CAO\DUANCUAHANGAPPLE\obj\Debug\net8.0\DUANCUAHANGAPPLE.sourcelink.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\appsettings.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.staticwebassets.runtime.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.staticwebassets.endpoints.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.exe
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.deps.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.runtimeconfig.json
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.dll
+C:\Users\Tiep\AppleStore\bin\Debug\net8.0\DUANCUAHANGAPPLE.pdb
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.AssemblyInfoInputs.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.AssemblyInfo.cs
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.csproj.CoreCompileInputs.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.RazorAssemblyInfo.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.RazorAssemblyInfo.cs
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.sourcelink.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\scopedcss\bundle\DUANCUAHANGAPPLE.styles.css
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\scopedcss\projectbundle\DUANCUAHANGAPPLE.bundle.scp.css
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.dll
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\refint\DUANCUAHANGAPPLE.dll
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.pdb
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\DUANCUAHANGAPPLE.genruntimeconfig.cache
+C:\Users\Tiep\AppleStore\obj\Debug\net8.0\ref\DUANCUAHANGAPPLE.dll
