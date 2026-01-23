@@ -1,0 +1,13 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# Build output
+*.dll
+*.pdb
+
+# Database
+*.db
+*.db-wal
+*.db-shm
