@@ -12,21 +12,30 @@ namespace DUANCUAHANGAPPLE.Controllers
         {
             _logger = logger;
         }
-
+        //----------------USER-------------------
         public IActionResult Index()
         {
-            return View();
+            return View("User/Index");
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            return View("User/Privacy");
         }
         public IActionResult danhmuc()
         {
-            return View();
+            return View("User/danhmuc");
         }
+        public IActionResult Login(){
+            return View("User/Login");
+        }
+        public IActionResult Register(){
+            return View("User/Register");
+        }
+        //--------------ADMIN--------------------
 
+
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
