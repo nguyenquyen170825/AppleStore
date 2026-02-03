@@ -27,7 +27,7 @@ namespace DUANCUAHANGAPPLE.Controllers
             return View("User/danhmuc");
         }
         public IActionResult Login(){
-            return View("User/Login");
+            return View("User/Account/Login");
         }
         public IActionResult Register(){
             return View("User/Register");
@@ -35,7 +35,7 @@ namespace DUANCUAHANGAPPLE.Controllers
         //--------------ADMIN--------------------
 
 
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

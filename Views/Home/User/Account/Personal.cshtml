@@ -1,0 +1,9 @@
+@section Styles {
+    <link rel="stylesheet" href="~/css/home/User/Personal.css" />
+}
+<h2>Thông tin cá nhân</h2>
+
+<p>Xin chào: <b>@User.Identity.Name</b></p>
+<p>Quyền: <b>@User.FindFirst("role")?.Value</b></p>
+
+<a asp-action="Logout" asp-controller="Account">Đăng xuất</a>

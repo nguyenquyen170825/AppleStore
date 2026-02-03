@@ -10,6 +10,6 @@ namespace DUANCUAHANGAPPLE.Data
         {
         }
 
-        public DbSet<SanPham> SanPham { get; set; }
+        public DbSet<Product> sanpham { get; set; }
     }
 }

@@ -3,18 +3,18 @@ using DUANCUAHANGAPPLE.Data;
 
 namespace DUANCUAHANGAPPLE.Controllers
 {
-    public class SanPhamController : Controller
+    public class ProductController : Controller
         {
             private readonly ApplicationDbContext _context;
 
-            public SanPhamController(ApplicationDbContext context)
+            public ProductController(ApplicationDbContext context)
             {
                 _context = context;
             }
             [HttpGet]
-            public IActionResult GetFlashSale()
+            public IActionResult()
             {
-                var list=_context.SanPham.Select(
+                var list=_context.sanpham.Select(
                     sp=>new
                     {
                         ma=sp.Ma,

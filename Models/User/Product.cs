@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DUANCUAHANGAPPLE.Models
 {
-    public class SanPham
+    public class Product
     {
         [Key]
         public int Ma { get; set; }
