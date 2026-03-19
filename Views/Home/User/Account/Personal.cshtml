@@ -1,9 +1,174 @@
+@model DUANCUAHANGAPPLE.Models.User
+
 @section Styles {
     <link rel="stylesheet" href="~/css/home/User/Personal.css" />
 }
-<h2>Thông tin cá nhân</h2>
 
-<p>Xin chào: <b>@User.Identity.Name</b></p>
-<p>Quyền: <b>@User.FindFirst("role")?.Value</b></p>
+<div class="personal-wrapper">
+    <div class="personal-container">
 
-<a asp-action="Logout" asp-controller="Account">Đăng xuất</a>
+        <!-- SIDEBAR -->
+        <aside class="personal-sidebar">
+            <div class="sidebar-user">
+                <div class="avatar"
+                     style="background-image:url('https://ui-avatars.com/api/?name=@Model.FullName')">
+                </div>
+                <div>
+                    <h3>@Model.FullName</h3>
+                    <p>Thành viên</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#profile" class="sidebar-link active">
+                    Thông tin tài khoản
+                </a>
+                <a href="#order" class="sidebar-link">
+                    Lịch sử mua hàng
+                </a>
+                <a href="#changepassword" class="sidebar-link">
+                    Đổi mật khẩu
+                </a>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="logout-btn">
+                        Đăng xuất
+                    </button>
+                </form>
+            </nav>
+        </aside>
+
+        <!-- CONTENT -->
+        <section id="profile" class="personal-content">
+            <h2>Thông tin tài khoản</h2>
+
+            <form asp-action="UpdateProfile" method="post" class="profile-form">
+
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input asp-for="FullName" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input asp-for="Email" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input asp-for="Phone" />
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ</label>
+                    <input asp-for="Address" />
+                </div>
+                <button type="submit" class="save-btn">
+                    Lưu thay đổi
+                </button>
+            </form>
+        </section>
+        <section id="order" class="personal-quanlygiohang">
+            <!-- HEADER -->
+            <div class="order-header">
+                <div>
+                    <h2>Đơn hàng của bạn</h2>
+                    <p>Quản lý và theo dõi tiến trình các đơn hàng.</p>
+                </div>
+
+                <input class="order-search" placeholder="Tìm theo mã đơn hàng..." />
+            </div>
+
+            <!-- FILTER -->
+            <div class="order-filter">
+                <button class="active">Tất cả</button>
+                <button>Đang xử lý</button>
+                <button>Đang giao</button>
+                <button>Hoàn thành</button>
+                <button>Đã huỷ</button>
+            </div>
+
+            <!-- LIST -->
+            <div class="order-list">
+
+                <!-- ORDER ITEM -->
+                <div class="order-card">
+
+                    <div class="order-top">
+                        <div>
+                            <div class="order-id-status">
+                                <span class="order-id">#APL8821</span>
+                                <span class="status shipping">Đang giao</span>
+                            </div>
+                            <span class="order-date">Đặt ngày 24 tháng 10, 2023</span>
+                        </div>
+
+                        <div class="order-total">
+                            <span>Tổng tiền</span>
+                            <strong>32.990.000₫</strong>
+                        </div>
+                    </div>
+
+                    <div class="order-products">
+
+                        <div class="order-product">
+                            <img src="/images/iphone.png">
+                            <div>
+                                <h4>iPhone 15 Pro Max</h4>
+                                <p>Titan Tự Nhiên, 256GB</p>
+                            </div>
+                        </div>
+
+                        <div class="order-product">
+                            <img src="/images/case.png">
+                            <div>
+                                <h4>Ốp lưng MagSafe</h4>
+                                <p>Trong suốt</p>
+                            </div>
+                        </div>
+
+                        <button class="order-detail-btn">Xem chi tiết</button>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="order-loadmore">
+                Tải thêm đơn hàng cũ ⌄
+            </div>
+
+        </section>
+        <section id="changepassword" class="personal-content">
+            <h2>Đổi mật khẩu</h2>
+            <p>Nội dung đổi mật khẩu sẽ ở đây.</p>
+            </div>
+
+        </div>
+        </section>
+
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Hide all content sections initially
+            $('.personal-content, .personal-quanlygiohang').hide();
+
+            // Show the default section (profile)
+            $('#profile').show();
+
+            // Handle sidebar link clicks
+            $('.sidebar-menu a').on('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all links and add to the clicked link
+                $('.sidebar-menu a').removeClass('active');
+                $(this).addClass('active');
+
+                // Hide all content sections and show the selected one
+                $('.personal-content, .personal-quanlygiohang').hide();
+                $($(this).attr('href')).fadeIn();
+            });
+        });
+    </script>
+}

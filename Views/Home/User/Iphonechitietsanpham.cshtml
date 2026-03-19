@@ -1,0 +1,160 @@
+@model DUANCUAHANGAPPLE.Models.SanPham
+
+@{
+    var firstVariant = Model.BienThes?.FirstOrDefault();
+    var firstImage = firstVariant?.HinhAnhs?.FirstOrDefault();
+}
+
+@section Styles{
+<link rel="stylesheet" href="~/css/home/User/Iphonechitietsanpham.css" asp-append-version="true" />
+}
+
+<div class="product-wrapper">
+
+    <div class="product-grid">
+
+        <!-- LEFT: IMAGE -->
+        <div class="image-section">
+
+            <div class="main-image">
+                @if (firstImage != null)
+                {
+                    <img src="@firstImage.UrlHinhAnh" />
+                }
+            </div>
+
+            <!-- Thumbnail -->
+            <div class="thumbnail-list">
+
+                @foreach (var img in firstVariant?.HinhAnhs ?? new List<DUANCUAHANGAPPLE.Models.HinhAnh>())
+                {
+                    <div class="thumb-item">
+                        <img src="@img.UrlHinhAnh" />
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT: INFO -->
+        <div class="info-section">
+
+            <h1 class="product-title">@Model.TenSanPham</h1>
+
+            @if (firstVariant != null)
+            {
+                <div class="price-box">
+
+                    <span class="price-new">
+                        @firstVariant.Gia.ToString("N0")đ
+                    </span>
+
+                    @if (firstVariant.GiaCu.HasValue)
+                    {
+                        <span class="price-old">
+                            @firstVariant.GiaCu.Value.ToString("N0")đ
+                        </span>
+                    }
+
+                </div>
+            }
+
+            <!-- COLOR -->
+            <div class="option-group">
+                <h4>CHỌN MÀU SẮC</h4>
+
+                <div class="color-list">
+                    @{
+                        int i=0;
+                    }
+                    @foreach (var bt in Model.BienThes)
+                    {
+                        <button class="color-circle @(i == 0 ? "active" : "") "
+                                data-id="@bt.BienTheId"
+                                style="background-color:@bt.Mau">
+                        </button>
+                        i++;
+                    }
+
+                </div>
+            </div>
+
+            <!-- STORAGE -->
+            <div class="option-group">
+                <h4>CHỌN DUNG LƯỢNG</h4>
+
+                <div class="storage-list">
+                    @{
+                        int j = 0;
+                    }
+
+                    @foreach (var dl in Model.BienThes.Select(x => x.DungLuong).Distinct())
+                    {
+                        <button class="storage-btn @(j == 0 ? "active" : "")">
+                            @dl
+                        </button>
+                        j++;
+                    }
+                </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="short-desc">
+                @Model.MoTa
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="action-buttons">
+                <button class="btn-buy">MUA NGAY</button>
+                <button class="btn-cart" onclick="addToCart()">THÊM VÀO GIỎ HÀNG</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    // biến lưu biến thể đang chọn (mặc định)
+    let selectedVariantId = @firstVariant.BienTheId;
+
+    // chọn màu
+    document.querySelectorAll(".color-circle").forEach(btn => {
+
+        btn.addEventListener("click", function(){
+
+            // bỏ active
+            document.querySelectorAll(".color-circle").forEach(b=>{
+                b.classList.remove("active");
+            });
+
+            // add active
+            this.classList.add("active");
+
+            // lấy id biến thể
+            selectedVariantId = this.dataset.id;
+
+        });
+
+    });
+
+    // thêm vào giỏ
+    function addToCart()
+    {
+        fetch('/Cart/AddGioHang?bientheid=' + selectedVariantId, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if(data.success){
+                alert("Đã thêm vào giỏ hàng");
+            } else {
+                console.log("Lỗi server:", data.error);
+            }
+
+        })
+        .catch(err => console.log(err));
+}
+</script>

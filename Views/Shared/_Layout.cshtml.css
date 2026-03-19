@@ -1,5 +1,8 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿.container {
+  max-width: 100% !important; /* Tràn viền 100% */
+  /* padding-left: 50px !important;  Khoảng cách lề trái */
+  /* padding-right: 50px !important; Khoảng cách lề phải */
+}
 
 a.navbar-brand {
   white-space: normal;
@@ -49,4 +52,45 @@ button.accept-policy {
   line-height: 60px;
 }
 /*custom*/
+.nav-menu{
+  background-color: white;
+}
+.menu-category{
+  position:relative;
+  
+}
+button {
+  /* Loại bỏ thiết kế mặc định */
+  background: none;
+  border: none;
+  color: black;       /* Thừa hưởng màu sắc */
+}
+#categoryDropdown{
+  position:absolute;
+  top:50px;
+  left: 0;
+  width:300px;
+  background:rgb(255, 255, 255);
+  border-radius:10px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.2);
+  padding:20px;
+  display:none;
+}
 
+.mega-menu{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.menu-item a{
+  text-decoration:none;
+  color:#333;
+  padding:8px;
+  display:block;
+}
+
+.menu-item a:hover{
+  background:#f3f3f3;
+  border-radius:5px;
+}

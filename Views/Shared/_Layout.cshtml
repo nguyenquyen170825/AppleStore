@@ -16,17 +16,22 @@
             <a asp-area="" asp-controller="Home" asp-action="Index">CUAHANG APPPLE</a>
         </div>
         <nav class="nav-menu">
-            <a asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
-            <a asp-area="" asp-controller="Home" asp-action="danhmuc">Danh mục</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách</a>
+            <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+            <div class="menu-category" id="menu-category">
+                <button id="btnCategory">Danh mục</button>
+                <div id="categoryDropdown">
+                    @await Component.InvokeAsync("Menudanhmuc")
+                </div>
+            </div>
+            <a asp-controller="Home" asp-action="Privacy">Chính sách</a>
         </nav> 
         <div class="nav-search">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="search"  placeholder="Bạn muốn gì cho ngày hôm nay ?">
         </div>
         <div class="nav-individual">
-            <a asp-area="" asp-controller="" asp-action="" ><i class="fa-solid fa-shopping-cart"></i></a>
-            <a asp-area="" asp-controller="Account" asp-action="Personal" ><i class="fa-solid fa-user"></i></a>
+            <a asp-controller="Product" asp-action="GioHang" ><i class="fa-solid fa-shopping-cart"></i></a>
+            <a asp-controller="Account" asp-action="Personal" ><i class="fa-solid fa-user"></i></a>
         </div>
     </header>
     <div class="container">
@@ -34,9 +39,64 @@
             @RenderBody()
         </main>
     </div>
+    <footer class="footer">
+        <div class="footer-container">
 
-    <footer class="border-top footer text-muted">
-        
+            <div class="footer-grid">
+
+                <!-- Giới thiệu -->
+                <div class="footer-col">
+                    <h2 class="logo">Apple Store</h2>
+                    <p class="footer-text">
+                        Chuyên cung cấp iPhone chính hãng, giá tốt, bảo hành uy tín.
+                    </p>
+                    <p>Trải nghiệm công nghệ đỉnh cao với dịch vụ chăm sóc khách hàng tận tâm.</p>
+                </div>
+
+                <!-- Danh mục -->
+                <div class="footer-col">
+                    <h3>Danh mục</h3>
+                    <ul>
+
+                    </ul>
+                </div>
+                <!-- Hỗ trợ -->
+                <div class="footer-col">
+                    <h3>Hỗ trợ</h3>
+                    <ul>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Liên hệ hỗ trợ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Liên hệ -->
+                <div class="footer-col">
+                    <h3>Liên hệ</h3>
+
+                    <p>📍 Ngõ 59 Phạm Văn Đồng, Cầu giấy, Hà Nội</p>
+                    <p>📞 0333148620</p>
+                    <p>✉ quyenketvl@gmail.com</p>
+
+                    <div class="social">
+                        <a href="https://www.facebook.com/share/1CVdXAJcUq/?mibextid=wwXIfr">Facebook</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">YouTube</a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Apple Store - All Rights Reserved.</p>
+
+                <div class="footer-links">
+                    <a href="#">Quyền riêng tư</a>
+                    <a href="#">Điều khoản</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

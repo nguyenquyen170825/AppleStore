@@ -22,10 +22,6 @@ namespace DUANCUAHANGAPPLE.Controllers
         {
             return View("User/Privacy");
         }
-        public IActionResult danhmuc()
-        {
-            return View("User/danhmuc");
-        }
         public IActionResult Login(){
             return View("User/Account/Login");
         }

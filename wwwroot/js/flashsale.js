@@ -1,22 +1,48 @@
 fetch('/Product/GetFlashSale')
-    .then(res=> res.json())
-    .then(data =>{renderflashsale(data)});
+    .then(res => res.json())
+    .then(data => renderFlashSale(data));
 
-function renderflashsale(list){
-    const container= document.getElementById('flashSaleProducts'); // Thay đổi ID container
-    container.innerHTML='';
+function renderFlashSale(list) {
+
+    const container = document.getElementById('flashSaleProducts');
+    container.innerHTML = '';
 
     list.forEach(sp => {
+
+        const gia = sp.gia ? sp.gia.toLocaleString() : '';
+        const giamgia = sp.giamgia ?? 0;
+
         container.innerHTML += `
+        <a href="/Product/Chitietsanpham/${sp.id}">
             <div class="product-card">
-                <img src="${sp.hinhAnh}" alt="${sp.ten}">
-                <h3>${sp.ten}</h3>
-                <p>Giá: ${sp.gia.toLocaleString()} đ</p>
-                <p>Giảm: ${sp.giamgia}%</p>
-                <p>Còn lại: ${sp.soluong}</p>
+
+                <div class="product-image">
+                    <img src="${sp.hinhAnh ?? '/images/no-image.png'}" alt="${sp.ten}">
+                </div>
+
+                <div class="product-info">
+
+                    <h3>${sp.ten}</h3>
+
+                    <div class="price">
+                        ${gia} đ
+                    </div>
+
+                    ${giamgia > 0 ? `
+                        <div class="discount-badge">
+                            -${giamgia}%
+                        </div>
+                    ` : ''}
+
+                    <div class="stock">
+                        Còn lại: ${sp.soluong}
+                    </div>
+
+                </div>
+
             </div>
+        </a>
         `;
     });
 
-    
 }
