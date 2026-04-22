@@ -12,6 +12,7 @@ namespace DUANCUAHANGAPPLE.Models
         public int BienTheId { get; set; }
 
         public string UrlHinhAnh { get; set; }
+        public string? AnhIcon { get; set; }
 
         public bool LaAnhChinh { get; set; }
 

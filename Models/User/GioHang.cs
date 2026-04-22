@@ -22,5 +22,6 @@ namespace DUANCUAHANGAPPLE.Models
 
         [ForeignKey("BienTheId")]
         public BienTheSanPham BienTheSanPham { get; set; }
+        
     }
 }   

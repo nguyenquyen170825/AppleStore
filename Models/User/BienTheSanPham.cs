@@ -33,5 +33,6 @@ namespace DUANCUAHANGAPPLE.Models
         public SanPham? SanPham { get; set; }
 
         public List<HinhAnh>? HinhAnhs { get; set; }
+        public List<ChiTietThanhToan>? ChiTietThanhToans { get; set; }
     }
 }

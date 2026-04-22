@@ -1,0 +1,151 @@
+?@{
+    ViewData["Title"] = "Qu?n lý danh m?c";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/danhmuc.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <h3>Qu?n lý danh m?c</h3>
+        <a class="add-btn" href="/DanhMuc/Create">
+            + Thêm danh m?c m?i
+        </a>
+    </div>
+    <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Tìm tên danh m?c..." />
+        <select id="statusFilter">
+            <option value="">T?t c? tr?ng thái</option>
+            <option value="true">Ho?t d?ng</option>
+            <option value="false">T?m ?n</option>
+        </select>
+        <button class="btn-search">Tìm</button>
+        <button class="btn-reset">Làm m?i</button>
+    </div>
+
+    <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+    <div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Mã danh m?c</th>
+                <th>Tên danh m?c</th>
+                <th>Tr?ng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="danhMucData">
+        </tbody>
+    </table>
+</div>
+</div>
+@section Scripts {
+    <script>
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+            setTimeout(() => { msgDiv.style.display = 'none'; }, 3000);
+        }
+
+        // Hàm load d? li?u danh m?c
+        async function fetchDanhMucs() {
+            try {
+                const searchKeyword = document.getElementById('searchInput').value.trim().toLowerCase();
+                const statusValue = document.getElementById('statusFilter').value;
+
+                const response = await fetch('/api/danhmuc');
+                if (!response.ok) throw new Error(`L?i HTTP: ${response.status}`);
+
+                let danhmucs = await response.json();
+
+                // L?c theo t? khóa tìm ki?m (tên danh m?c)
+                if (searchKeyword) {
+                    danhmucs = danhmucs.filter(d => 
+                        (d.tenDanhMuc && d.tenDanhMuc.toLowerCase().includes(searchKeyword))
+                    );
+                }
+
+                // L?c theo tr?ng thái
+                if (statusValue !== "") {
+                    const isStatusTrue = statusValue === "true";
+                    danhmucs = danhmucs.filter(d => d.trangThai === isStatusTrue);
+                }
+
+                const tableBody = document.getElementById('danhMucData');
+
+                if (!danhmucs || danhmucs.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Chua có danh m?c nào!</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = danhmucs.map(d => {
+                    return `
+                    <tr>
+                        <td>${d.maDanhMuc}</td>
+                        <td><strong>${d.tenDanhMuc || "Không tên"}</strong></td>
+                        <td>
+                           <span class="badge ${d.trangThai ? "badge-success" : "badge-danger"}">
+                                ${d.trangThai ? "Ho?t d?ng" : "T?m ?n"}
+                           </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit" onclick="location.href='/DanhMuc/Edit/${d.maDanhMuc}'"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn-delete" onclick="deleteDanhMuc(${d.maDanhMuc})"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error("L?i:", error);
+                document.getElementById('danhMucData').innerHTML =
+                    `<tr><td colspan="4" style="color:red; text-align: center;">L?i k?t n?i API. Vui lòng ki?m tra l?i server.</td></tr>`;
+            }
+        }
+
+        // Hàm xóa danh m?c
+        async function deleteDanhMuc(id) {
+            if (!confirm("Xác nh?n xóa danh m?c này?")) return;
+            try {
+                const response = await fetch(`/api/danhmuc/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showMessage("Ðã xóa thành công!", true);
+                    fetchDanhMucs(); // T? d?ng load l?i b?ng sau khi xóa
+                } else {
+                    // Ð?c n?i dung l?i chi ti?t do Backend g?i v?
+                    const errorData = await response.json();
+                    showMessage("Xóa th?t b?i: " + (errorData.detail || errorData.message || "L?i không xác d?nh"));
+                }
+            } catch (error) {
+                console.error("L?i xóa:", error);
+                showMessage("L?i k?t n?i ho?c s? c? m?ng!");
+            }
+        }
+
+        // T? d?ng ch?y hàm fetchDanhMucs khi trang load xong
+        document.addEventListener("DOMContentLoaded", fetchDanhMucs);
+
+        // L?ng nghe s? ki?n click vào nút Tìm ki?m
+        document.querySelector('.btn-search').addEventListener('click', fetchDanhMucs);
+
+        // L?ng nghe s? ki?n gõ phím Enter trong ô tìm ki?m
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') fetchDanhMucs();
+        });
+
+        // L?ng nghe s? ki?n thay d?i thanh ch?n Tr?ng thái
+        document.getElementById('statusFilter').addEventListener('change', fetchDanhMucs);
+
+        // X? lý nút Làm m?i (Reset)
+        document.querySelector('.btn-reset').addEventListener('click', function () {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            fetchDanhMucs();
+        });
+    </script>
+}

@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Chỉnh sửa số lượng sản phẩm";
+}
+<div class="container mt-4" style="max-width: 600px;">
+    <h2>Chỉnh sửa số lượng sản phẩm</h2>
+    <div class="card p-4 mt-3 shadow-sm border-0">
+        <form id="editItemForm">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Sản phẩm</label>
+                <input type="text" id="itemName" class="form-control bg-light" disabled />
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Số lượng</label>
+                <input type="number" id="quantity" class="form-control" min="1" required />
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" onclick="saveItem()"><i class="fa-solid fa-save"></i> Lưu thay đổi</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const orderId = @ViewBag.OrderId;
+        const itemId = @ViewBag.OrderItemId;
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            const response = await fetch(`/api/order/detail/${orderId}`);
+            if (response.ok) {
+                const data = await response.json();
+                const item = data.items.find(i => i.bienTheID == itemId);
+                if (item) {
+                    document.getElementById('itemName').value = `${item.tenSanPham} (${item.mau} - ${item.dungLuong})`;
+                    document.getElementById('quantity').value = item.quantity;
+                }
+            }
+        });
+
+        async function saveItem() {
+            const qty = document.getElementById('quantity').value;
+            if (qty < 1) {
+                alert("Số lượng phải lớn hơn 0");
+                return;
+            }
+            const payload = { quantity: parseInt(qty) };
+
+            const res = await fetch(`/api/order/${orderId}/item/${itemId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("Cập nhật số lượng thành công!");
+                // Quay về trang Edit đơn hàng
+                window.location.href = `/Order/Edit/${orderId}`;
+            } else {
+                alert("Cập nhật thất bại!");
+            }
+        }
+    </script>
+}

@@ -1,0 +1,159 @@
+/* =========================================
+   GIAO DIỆN CHUNG & LAYOUT
+   ========================================= */
+.main {
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* =========================================
+   NÚT BẤM (BUTTONS) & FORM CONTROL
+   ========================================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+}
+
+.form-control {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* =========================================
+   BẢNG DỮ LIỆU (TABLE)
+   ========================================= */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+}
+
+tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eaeaea;
+    color: #212529;
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* =========================================
+   THÀNH PHẦN BÊN TRONG BẢNG
+   ========================================= */
+.product-img {
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Các nút thao tác trong bảng */
+.detail-btn, .btn-edit, .btn-delete {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 6px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.detail-btn {
+    background-color: #17a2b8; /* Xanh lơ - Info */
+}
+.detail-btn:hover { background-color: #138496; transform: scale(1.05); }
+
+.btn-edit {
+    background-color: #ffc107; /* Vàng - Warning */
+    color: #212529; 
+}
+.btn-edit:hover { background-color: #e0a800; transform: scale(1.05); }
+
+.btn-delete {
+    background-color: #dc3545; /* Đỏ - Danger */
+}
+.btn-delete:hover { background-color: #c82333; transform: scale(1.05); }

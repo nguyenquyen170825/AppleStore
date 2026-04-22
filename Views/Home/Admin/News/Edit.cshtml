@@ -1,0 +1,103 @@
+
+@model DUANCUAHANGAPPLE.ViewModels.DanhMucVM
+@{
+    ViewData["Title"] = "Cập nhật danh mục";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" href="/DanhMuc/Index">
+            &laquo; Quay lại
+        </a>
+        <h3>Sửa danh mục</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="editCategoryForm">
+            <input type="hidden" id="maDanhMuc" value="" />
+            
+            <div class="form-group">
+                <label>Tên danh mục (*)</label>
+                <input  asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required placeholder="Nhập tên danh mục..." />
+                <span asp-validation-for="TenDanhMuc" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái</label>
+                <select asp-for="TrangThai" id="trangThai" class="form-control">
+                    <option value="true">Hoạt động</option>
+                    <option value="false">Tạm ẩn</option>
+                </select>
+                <span asp-validation-for="TrangThai" class="text-danger" style="color:red; font-size:14px;"></span>
+
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Lưu thay đổi</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const pathParts = window.location.pathname.split('/');
+        const categoryId = pathParts[pathParts.length - 1];
+
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const response = await fetch(`/api/danhmuc/${categoryId}`);
+                if (!response.ok) throw new Error("Không tìm thấy thông tin");
+                const category = await response.json();
+                
+                document.getElementById('maDanhMuc').value = category.maDanhMuc;
+                document.getElementById('tenDanhMuc').value = category.tenDanhMuc;
+                document.getElementById('trangThai').value = category.trangThai ? "true" : "false";
+            } catch (error) {
+                console.error("Lỗi:", error);
+                showMessage("Lỗi tải dữ liệu danh mục.");
+            }
+        });
+
+        document.getElementById('editCategoryForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.getElementById('message').style.display = 'none'; // Ẩn thông báo lỗi cũ (nếu có) trước khi gửi yêu cầu
+
+            const categoryData = {
+                maDanhMuc: parseInt(document.getElementById('maDanhMuc').value),
+                tenDanhMuc: document.getElementById('tenDanhMuc').value,
+                trangThai: document.getElementById('trangThai').value === "true"
+            };
+
+            try {
+                const response = await fetch(`/api/danhmuc/${categoryId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(categoryData)
+                });
+
+                if (response.ok) {
+                    showMessage('Cập nhật danh mục thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = '/DanhMuc/Index';
+                    }, 1000);
+                } else {
+                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại dữ liệu hoặc server.');
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối tới server!');
+            }
+        });
+    </script>
+}

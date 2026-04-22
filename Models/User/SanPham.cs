@@ -27,6 +27,8 @@ namespace DUANCUAHANGAPPLE.Models
 
         public List<BienTheSanPham> BienThes { get; set; }
 
-        public ThongSoKyThuat ThongSo { get; set; }
+        public List<ThongSoKyThuat>? ThongSoKyThuats { get; set; }
+
+         public List<ChiTietThanhToan> ChiTietThanhToans { get; set; }
     }
 }

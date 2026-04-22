@@ -1,0 +1,110 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Đã bỏ margin-bottom: 60px vì hệ thống flexbox của chúng ta đã lo việc đẩy footer xuống đáy */
+    background-color: #f8f9fa; 
+}
+
+/* =========================================
+   GIAO DIỆN ADMIN: SIDEBAR VÀ MAIN WRAPPER
+   ========================================= */
+
+/* Sidebar chạy dọc toàn màn hình */
+.sidebar {
+    width: 250px; 
+    min-height: 100vh;
+    background-color: #212529; 
+    transition: all 0.3s ease-in-out; /* Đổi thành all để mượt cả margin lẫn padding */
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu menu quá dài */
+    overflow-x: hidden;
+    position: fixed; /* Cố định Sidebar */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Đảm bảo Sidebar luôn nổi lên trên cùng */
+}
+
+/* Khi sidebar bị ẩn đi */
+.sidebar.collapsed {
+    margin-left: -250px;
+}
+
+.sidebar-brand {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 15px 20px;
+    display: block;
+    text-decoration: none;
+    border-bottom: 1px solid #4f5962;
+    white-space: nowrap; 
+    transition: padding 0.3s ease; /* Hiệu ứng hover mượt hơn */
+}
+
+.sidebar-brand:hover {
+    color: #f8f9fa;
+    padding-left: 25px; 
+}
+
+.sidebar .nav-link {
+    color: #c2c7d0;
+    padding: 12px 20px;
+    margin-bottom: 2px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.sidebar .nav-link:hover, 
+.sidebar .nav-link.active {
+    background-color: #2f343b; /* Màu xanh nổi bật cho nút active */
+    color: #fff !important;
+    border-radius: 5px;
+    padding-left: 25px; 
+}
+
+/* Giao diện chính */
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: calc(100% - 250px); /* Thu hẹp width lại để không bị tràn ngang */
+    margin-left: 250px; /* Đẩy nội dung sang phải để chừa chỗ cho fixed Sidebar */
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out; /* Trượt mượt mà cùng Sidebar */
+}
+
+/* CÚ PHÁP MA THUẬT: Khi sidebar có class .collapsed, thẻ .main-wrapper nằm ngay cạnh nó sẽ được định dạng lại */
+.sidebar.collapsed + .main-wrapper header {
+    left: 0;
+    width: 100%;
+}
+header {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+main {
+    margin-top: 55px; 
+}
+.main-wrapper.expanded {
+    margin-left: 0;
+    width: 100%;
+}

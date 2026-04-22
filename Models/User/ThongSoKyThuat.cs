@@ -7,25 +7,19 @@ namespace DUANCUAHANGAPPLE.Models
     public class ThongSoKyThuat
     {
         [Key]
-        public int ThongSoId { get; set; }
+        public int Id { get; set; }
 
         public int SanPhamId { get; set; }
 
-        public string ManHinh { get; set; }
+        public int LoaiThongSoId { get; set; }
 
-        public string Chipset { get; set; }
+        public string TenThongSo { get; set; }
 
-        public string CameraSau { get; set; }
-
-        public string CameraTruoc { get; set; }
-
-        public string Pin { get; set; }
-
-        public string WiFi { get; set; }
-
-        public string Bluetooth { get; set; }
-
+        public string GiaTri { get; set; }
         [ForeignKey("SanPhamId")]
-        public SanPham SanPham { get; set; }
+        public SanPham? SanPham { get; set; }
+
+        [ForeignKey("LoaiThongSoId")]
+        public LoaiThongSo? LoaiThongSo { get; set; }
     }
 }

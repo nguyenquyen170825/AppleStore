@@ -1,5 +1,4 @@
 @model List<DUANCUAHANGAPPLE.Models.SanPham>
-
 @section Styles{
     <link rel="stylesheet" href="~/css/home/User/Iphonedanhmuc.css">
     <link rel="stylesheet" href="~/css/home/User/ProductCart.css" />
@@ -28,10 +27,39 @@
     <!-- FILTER BAR -->
     <div class="filter-bar">
 
-        @await Component.InvokeAsync("Filter", new {
-        title = "Khoảng giá",
-        options = new List<string> { "Dưới 10tr", "10tr - 20tr", "Trên 20tr" }
-        })
+        <!-- Khoảng giá - Range Slider -->
+        <div class="filter filter-price-wrapper">
+            <button class="filter-chip">
+                Khoảng giá
+                <span id="priceRangeLabel">0đ - 50tr</span>
+                <span>▼</span>
+            </button>
+            <div class="filter-menu price-slider-menu">
+                <div class="price-slider-container">
+                    <div class="price-slider-header">
+                        <span id="priceMinLabel">0đ</span>
+                        <span id="priceMaxLabel">50,000,000đ</span>
+                    </div>
+                    <div class="range-slider">
+                        <div class="range-track" id="rangeTrack"></div>
+                        <input type="range" id="priceMin" min="0" max="50000000" step="500000" value="0" />
+                        <input type="range" id="priceMax" min="0" max="50000000" step="500000" value="50000000" />
+                    </div>
+                    <div class="price-slider-inputs">
+                        <div class="price-input-group">
+                            <label>Từ</label>
+                            <input type="text" id="priceMinInput" value="0đ" readonly />
+                        </div>
+                        <span class="price-dash">—</span>
+                        <div class="price-input-group">
+                            <label>Đến</label>
+                            <input type="text" id="priceMaxInput" value="50,000,000đ" readonly />
+                        </div>
+                    </div>
+                    <button class="price-apply-btn" onclick="applyPriceFilter()">Áp dụng</button>
+                </div>
+            </div>
+        </div>
 
         @await Component.InvokeAsync("Filter", new {
             title = "Dung lượng",
@@ -49,8 +77,8 @@
         })
 
         <div class="filter">
-            <button class="filter-chip" onclick="toggleMenu(this)">
-                Xóa tất cả
+            <button class="filter-chip filter-chip-clear">
+                <i class="fa-solid fa-xmark"></i> Xóa tất cả
             </button>
         </div>
 
@@ -89,26 +117,134 @@
 
     </div>
 
-</main>
-@section Scripts {
-    <script>
-        function toggleMenu(button){
+    <!-- BOTTOM INFO GRID -->
+    <div class="bottom-info-grid">
+        <!-- LEFT: SEO CONTENT -->
+        <div class="seo-content-section">
+            <div class="seo-intro-box">
+                <p><strong>iPhone là sản phẩm tiêu biểu của Apple Inc.</strong> – thương hiệu công nghệ toàn cầu có trụ sở tại Cupertino, California, gắn liền với biểu tượng logo "quả táo khuyết" và tầm nhìn của Steve Jobs. Không chỉ là một chiếc smartphone, iPhone nằm ở trung tâm của hệ sinh thái Apple, kết nối chặt chẽ với các sản phẩm như MacBook, iPad, Apple Watch cùng các dịch vụ như App Store và iCloud, mang lại trải nghiệm liền mạch cho người dùng.</p>
+            </div>
 
-            const menus = document.querySelectorAll(".filter-menu");
-            const menu = button.nextElementSibling;
+            <div class="seo-accordion-box">
+                <div class="seo-accordion-header">
+                    <span>Nội dung chính</span>
+                    <i class="fa-solid fa-chevron-up"></i>
+                </div>
+                <div class="seo-accordion-body">
+                    <div class="seo-text-content">
+                        <h3>1. Hành trình lịch sử cùa Apple và điện thoại iPhone</h3>
+                        <p>Ra mắt lần đầu vào năm 2007, chiếc iPhone thế hệ đầu tiên do Steve Jobs giới thiệu đã định hình lại hoàn toàn khái niệm về điện thoại thông minh. Từ màn hình cảm ứng đa điểm nguyên thuỷ cho tới kỷ nguyên của FaceID, chip Apple Silicon và camera "3 mắt", iPhone liên tục khẳng định vị thế dẫn đầu trong giới công nghệ nhờ hệ điều hành iOS mượt mà và tính bảo mật tuyệt đối.</p>
 
-            menus.forEach(m => {
-                if(m !== menu){
-                    m.style.display = "none";
+                        <h3>2. Các dòng iPhone phổ biến hiện nay</h3>
+                        <p>Nhằm đáp ứng đa dạng nhu cầu của người dùng, Apple chia iPhone thành các phân khúc rõ rệt:</p>
+                        <ul>
+                            <li><strong>iPhone bản tiêu chuẩn (Standard) & Plus:</strong> Phù hợp cho số đông với thiết kế trẻ trung, nhiều màu sắc, thời lượng pin tốt cùng mức giá dễ tiếp cận.</li>
+                            <li><strong>iPhone Pro & Pro Max:</strong> Dòng sản phẩm cao cấp (Flagship) hội tụ những tinh hoa công nghệ mới nhất của hãng: khung viền Titanium/Thép không gỉ, cụm 3 camera chuyên nghiệp, màn hình ProMotion 120Hz mượt mà và vi xử lý mạnh nhất.</li>
+                            <li><strong>iPhone SE:</strong> Thiết kế cổ điển nhỏ gọn, được trang bị cấu hình nội tại mạnh mẽ với mức giá tiết kiệm.</li>
+                        </ul>
+
+                        <h3>3. Lựa chọn dung lượng bộ nhớ phù hợp</h3>
+                        <p>Apple cung cấp nhiều tuỳ chọn lưu trữ (ROM) dựa trên thói quen sử dụng khác nhau:</p>
+                        <ul>
+                            <li><strong>64GB - 128GB:</strong> Phù hợp với nhu cầu cơ bản: lướt web, sử dụng mạng xã hội, nghe gọi và lưu trữ lượng ảnh/video vừa phải.</li>
+                            <li><strong>256GB - 512GB:</strong> Phiên bản lý tưởng để sử dụng lâu dài, dành cho người thích quay vlog, chơi các tựa game nặng và lưu trữ tài liệu công việc.</li>
+                            <li><strong>1TB:</strong> Mức dung lượng khổng lồ dành cho các nhà sáng tạo nội dung chuyên nghiệp, lưu phim Apple ProRes và chụp ảnh ProRAW liên tục.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: NEWS SECTION -->
+        <div class="news-section">
+            <div class="news-header">
+                <h3>Tin tức sản phẩm</h3>
+                <a href="#">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+            <div class="news-list">
+                @foreach (var item in ViewBag.News)
+                {
+                    <a href="@item.Link" target="_blank" class="news-item">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <div class="news-image">
+                                <img src="@item.ImageUrl" alt="@item.Tieude" />
+                            </div>
+                        }
+                        <div class="news-item-content">
+                            <h3>@item.Tieude</h3>
+                            <div class="news-meta">
+                                <span class="news-source">@item.Source</span>
+                                <span class="news-dot"></span>
+                                <span class="news-date">@item.Ngaytao.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                    </a>
                 }
-            });
+            </div>
+        </div>
+    </div>
 
-            if(menu.style.display === "block"){
-                menu.style.display = "none";
-            }else{
-                menu.style.display = "block";
-            }
+</main>
 
+@section Scripts {
+<script>
+    // ====== Price Range Slider ======
+    const priceMin = document.getElementById('priceMin');
+    const priceMax = document.getElementById('priceMax');
+    const rangeTrack = document.getElementById('rangeTrack');
+    const priceMinLabel = document.getElementById('priceMinLabel');
+    const priceMaxLabel = document.getElementById('priceMaxLabel');
+    const priceMinInput = document.getElementById('priceMinInput');
+    const priceMaxInput = document.getElementById('priceMaxInput');
+    const priceRangeLabel = document.getElementById('priceRangeLabel');
+
+    function formatPrice(val) {
+        val = parseInt(val);
+        if (val >= 1000000) return (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'tr';
+        if (val >= 1000) return (val / 1000).toFixed(0) + 'k';
+        return val + 'đ';
+    }
+
+    function formatPriceFull(val) {
+        return parseInt(val).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function updatePriceSlider() {
+        let minVal = parseInt(priceMin.value);
+        let maxVal = parseInt(priceMax.value);
+
+        // Prevent crossing
+        if (minVal > maxVal - 1000000) {
+            priceMin.value = maxVal - 1000000;
+            minVal = parseInt(priceMin.value);
         }
-    </script>
+
+        const totalRange = parseInt(priceMin.max);
+        const percentMin = (minVal / totalRange) * 100;
+        const percentMax = (maxVal / totalRange) * 100;
+
+        rangeTrack.style.left = percentMin + '%';
+        rangeTrack.style.width = (percentMax - percentMin) + '%';
+
+        priceMinLabel.textContent = formatPriceFull(minVal);
+        priceMaxLabel.textContent = formatPriceFull(maxVal);
+        priceMinInput.value = formatPriceFull(minVal);
+        priceMaxInput.value = formatPriceFull(maxVal);
+        priceRangeLabel.textContent = formatPrice(minVal) + ' - ' + formatPrice(maxVal);
+    }
+
+    if (priceMin && priceMax) {
+        priceMin.addEventListener('input', updatePriceSlider);
+        priceMax.addEventListener('input', updatePriceSlider);
+        updatePriceSlider();
+    }
+
+    function applyPriceFilter() {
+        const minVal = priceMin.value;
+        const maxVal = priceMax.value;
+        console.log('Filter price:', minVal, '-', maxVal);
+        // TODO: Gọi API lọc sản phẩm theo khoảng giá
+    }
+</script>
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Apple Store</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/home/Admin/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .admin-sidebar { min-height: 100vh; background: #343a40; color: white; padding-top: 20px; }
+        .admin-sidebar a { color: #adb5bd; text-decoration: none; padding: 12px 20px; display: block; border-bottom: 1px solid #495057; }
+        .admin-sidebar a:hover { background: #495057; color: white; }
+        .admin-sidebar a.active { background: #0d6efd; color: white; }
+        .admin-header { background: white; padding: 15px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .content-wrapper { padding: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 admin-sidebar p-0">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">APPLE STORE</h4>
+                    <span class="badge bg-primary">Quản trị viên</span>
+                </div>
+                <a href="/Admin/Home/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="fa fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                <a href="/Admin/DanhMuc/Index">
+                    <i class="fa fa-list me-2"></i> Danh mục
+                </a>
+                <a href="/Admin/Product/Index">
+                    <i class="fa fa-mobile-alt me-2"></i> Sản phẩm
+                </a>
+                <a href="/Admin/Order/Index">
+                    <i class="fa fa-shopping-cart me-2"></i> Đơn hàng
+                </a>
+                 <a href="/Admin/News/Index">
+                    <i class="fa fa-newspaper me-2"></i> Tin tức
+                </a>
+                <a href="/Admin/User/Index">
+                    <i class="fa fa-users me-2"></i> Người dùng
+                </a>
+                <a href="/" class="text-warning mt-5">
+                    <i class="fa fa-arrow-left me-2"></i> Về trang chủ
+                </a>
+                <form asp-controller="Login" asp-action="Logout" method="post" class="p-3">
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">Đăng xuất</button>
+                </form>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-0">
+                <div class="admin-header d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 fw-bold text-secondary">@ViewData["Title"]</h5>
+                    <div class="user-info">
+                        <span>Chào, <strong>Admin</strong></span>
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

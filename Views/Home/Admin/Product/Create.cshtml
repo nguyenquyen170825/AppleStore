@@ -1,0 +1,174 @@
+@model DUANCUAHANGAPPLE.ViewModels.ProductVM
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+@section Styles {
+   
+        <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" href="/Product/Index">
+            &laquo; Quay lại
+        </a>
+        <h3>Thêm sản phẩm mới</h3>
+    </div>
+
+
+
+    <div class="form-container">
+        <form id="createProductForm">
+
+            <div class="form-group">
+                <label>Tên sản phẩm (*)</label>
+                <input asp-for="TenSanPham" id="tenSanPham" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                <span asp-validation-for="TenSanPham" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Danh mục (*)</label>
+                <select asp-for="MaDanhMuc" id="maDanhMuc" class="form-control">
+                    <option value="">-- Đang tải danh mục... --</option>
+                </select>
+                <span asp-validation-for="MaDanhMuc" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Thương hiệu</label>
+                <input asp-for="ThuongHieu" id="thuongHieu" class="form-control" placeholder="Nhập thương hiệu..." />
+                <span asp-validation-for="ThuongHieu" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea asp-for="MoTa" id="moTa" class="form-control" rows="4" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                <span asp-validation-for="MoTa" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái</label>
+                <select asp-for="TrangThai" id="trangThai" class="form-control">
+                    <option value="true">Đang bán (On sale)</option>
+                    <option value="false">Ngừng kinh doanh (Out of stock)</option>
+                </select>
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Lưu sản phẩm</button>
+        </form>
+    </div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+<script>
+function showMessage(text, isSuccess = false) {
+    const msgDiv = document.getElementById('message');
+    msgDiv.textContent = text;
+    msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+    msgDiv.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+
+    // LOAD DANH MỤC
+    try {
+        const response = await fetch('/api/danhmuc');
+        if (!response.ok) throw new Error('Không thể tải danh mục');
+
+        const danhMucs = await response.json();
+        const select = document.getElementById('maDanhMuc');
+
+        select.innerHTML = '<option value="">-- Vui lòng chọn danh mục --</option>';
+
+        danhMucs.forEach(dm => {
+            if (dm.trangThai) {
+                const option = document.createElement('option');
+                option.value = dm.maDanhMuc;      // ✅ ID
+                option.textContent = dm.tenDanhMuc; // hiển thị
+                select.appendChild(option);
+            }
+        });
+
+    } catch (error) {
+        console.error('Lỗi tải danh mục:', error);
+        const select = document.getElementById('maDanhMuc');
+        select.disabled = true;
+        select.innerHTML = '<option value="">Lỗi tải danh mục</option>';
+    }
+
+    // SUBMIT FORM
+    document.getElementById('createProductForm')
+    .addEventListener('submit', async function (e) {
+        e.preventDefault();
+        document.getElementById('message').style.display = 'none';
+
+        const tenSanPham = document.getElementById('tenSanPham').value.trim();
+        const maDanhMucValue = document.getElementById('maDanhMuc').value;
+        const thuongHieu = document.getElementById('thuongHieu').value.trim();
+        const moTa = document.getElementById('moTa').value.trim();
+        const trangThai = document.getElementById('trangThai').value === 'true';
+
+        // ✅ VALIDATE (QUAN TRỌNG)
+        if (!tenSanPham) {
+            showMessage('Tên sản phẩm không được để trống.');
+            return; // Dừng việc gửi form
+        }
+        if (!maDanhMucValue) {
+            showMessage('Vui lòng chọn một danh mục.');
+            return; // Dừng việc gửi form
+        }
+
+
+        // ✅ DATA CHUẨN
+        const productData = {
+            tenSanPham: tenSanPham,
+            maDanhMuc: parseInt(maDanhMucValue), // luôn là số
+            thuongHieu: thuongHieu,
+            moTa: moTa,
+            trangThai: trangThai
+        };
+
+        console.log("DATA GỬI:", productData);
+
+        try {
+            const response = await fetch('/api/product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            });
+
+            if (response.ok) {
+                showMessage('Thêm sản phẩm thành công!', true);
+                setTimeout(() => {
+                    window.location.href = '/Product/Index';
+                }, 1000);
+            } else {
+                const errorData = await response.json().catch(() => null); // Bắt lỗi nếu response không phải JSON
+                console.error("Chi tiết lỗi từ server:", errorData);
+                
+                let errorMessage = 'Thêm thất bại! Vui lòng kiểm tra lại thông tin nhập.';
+                
+                if (errorData && errorData.errors) {
+                    // Lấy tất cả thông báo lỗi từ ModelState của ASP.NET Core
+                    const errorMessages = Object.values(errorData.errors).flat();
+                    errorMessage = 'Lỗi dữ liệu: ' + errorMessages.join(' | ');
+                } else if (errorData && errorData.message) {
+                    errorMessage = 'Thêm thất bại! ' + errorData.message;
+                }
+                
+                showMessage(errorMessage);
+            }
+
+        } catch (error) {
+            console.error('Lỗi khi gọi API:', error);
+            showMessage('Lỗi kết nối đến máy chủ!');
+        }
+    });
+});
+</script>
+}

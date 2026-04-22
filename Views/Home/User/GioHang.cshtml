@@ -1,74 +1,15 @@
+@model List<DUANCUAHANGAPPLE.Models.GioHang>
+
 @section Styles{
     <link rel="stylesheet" href="~/css/home/User/GioHang.css" asp-append-version="true" >
 }
-
 <div class="cart-container">
 
     <h1>Giỏ hàng của bạn.</h1>
     <p class="sub">Miễn phí vận chuyển cho tất cả đơn hàng Apple.</p>
-
-    <div class="cart-layout">
-        <!-- LEFT -->
-        <div class="cart-products">
-
-            <div class="select-all">
-                <input type="checkbox" checked />
-                <span>Chọn tất cả</span>
-
-                <div class="selected-count">
-                    Đã chọn: <b>2 sản phẩm</b>
-                </div>
-            </div>
-
-            <!-- PRODUCT 1 -->
-            <div class="product">
-                @await Component.InvokeAsync("GioHang")
-
-            </div>
-            <!-- SHIPPING -->
-            <div class="shipping-box">
-                <h4>⚡ Vận chuyển: Giao hàng nhanh (Miễn phí)</h4>
-                <p>Đơn hàng của bạn sẽ được ưu tiên xử lý ngay.</p>
-            </div>
-
-        </div>
-
-        <!-- RIGHT -->
-        <div class="order-summary">
-
-            <h2>Tóm tắt đơn hàng</h2>
-
-            <div class="row">
-                <span>Tạm tính</span>
-                <span>53.580.000đ</span>
-            </div>
-
-            <div class="row">
-                <span>Phí vận chuyển</span>
-                <span class="green">Miễn phí</span>
-            </div>
-
-            <div class="row">
-                <span>Khuyến mãi</span>
-                <span class="red">- 0đ</span>
-            </div>
-
-            <hr />
-
-            <div class="total">
-                <span>Tổng cộng</span>
-                <span>53.580.000đ</span>
-            </div>
-
-            <button class="checkout-btn">
-                Thanh toán ngay →
-            </button>
-
-            <button class="continue-btn">
-                Tiếp tục mua sắm
-            </button>
-
-        </div>
+    <div id="cart-container">
+         @Html.Partial("Partial/MiniGioHang", Model)
+    </div>
 
     </div>
 

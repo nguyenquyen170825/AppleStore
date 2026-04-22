@@ -23,15 +23,22 @@ namespace DUANCUAHANGAPPLE.Controllers
                 .ThenInclude(bt => bt.HinhAnhs)
                 .ToList();
 
+            var data = _context.News
+                .OrderByDescending(x => x.Ngaytao)
+                .Take(20)
+                .ToList();
+
             if (!list.Any())
                 return NotFound();
 
             if (id == 1)
             {
+                ViewBag.News = data;
                 return View("~/Views/Home/User/Iphonedanhmuc.cshtml", list);
             }
             else if (id == 2)
             {
+                ViewBag.News = data;
                 return View("~/Views/Home/User/Laptopdanhmuc.cshtml", list);
             }
 
@@ -70,7 +77,8 @@ namespace DUANCUAHANGAPPLE.Controllers
             var product = _context.SanPhams
                 .Include(p => p.BienThes)
                 .ThenInclude(bt => bt.HinhAnhs)
-                .Include(p => p.ThongSo)
+                .Include(p => p.ThongSoKyThuats)
+                .ThenInclude(ts => ts.LoaiThongSo)
                 .FirstOrDefault(p => p.SanPhamId == id);
 
             if (product == null)
@@ -115,7 +123,6 @@ namespace DUANCUAHANGAPPLE.Controllers
             var laptop = _context.SanPhams
                 .Include(p => p.BienThes)
                 .ThenInclude(bt => bt.HinhAnhs)
-                .Include(p => p.ThongSo)
                 .FirstOrDefault(p => p.SanPhamId == id && p.MaDanhMuc == 2);
 
             if (laptop == null)

@@ -1,65 +1,189 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/home/User/Index.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 }
-<div class="ads">
-    <div class="ads-content">
-        <h3>CỬA HÀNG APPLE CHÍNH HÃNG </h3>
-        <h3>CÔNG NGHỆ TRONG TẦM TAY</h3>
-        <p>Khám phá các sản phẩm Apple chính hãng với thiết kế tinh tế, hiệu năng vượt trội và trải nghiệm công nghệ hiện đại.</p>
-        <p>Bắt đầu hành trình công nghệ của bạn cùng Apple ngay hôm nay.</p>
-        <div class="ads-content-menu">
-            <a asp-controller="" asp-action=""><i class="fa-solid fa-arrow-right"></i> Khám phá ngay</a>
-            <a asp-controller="" asp-action=""><i class="fa-solid fa-boxes-stacked"></i> Danh mục sản phẩm</a>
+
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero" id="hero-section">
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+        <span class="hero-badge">
+            <i class="fa-solid fa-apple-whole"></i> Apple Authorized Reseller
+        </span>
+        <h1 class="hero-title">
+            <span class="hero-title-line">Cửa Hàng Apple</span>
+            <span class="hero-title-line gradient-text">Chính Hãng</span>
+        </h1>
+        <p class="hero-description">
+            Khám phá các sản phẩm Apple chính hãng với thiết kế tinh tế, hiệu năng vượt trội và trải nghiệm công nghệ hiện đại. Bắt đầu hành trình công nghệ của bạn ngay hôm nay.
+        </p>
+        <div class="hero-actions">
+            <a class="hero-btn hero-btn-primary" asp-controller="Home" asp-action="Index">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>Khám phá ngay</span>
+            </a>
+            <a class="hero-btn hero-btn-outline" asp-controller="Home" asp-action="Index">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Danh mục sản phẩm</span>
+            </a>
         </div>
-    </div>
-    <div class="ads-img">
-        
-    </div>
-</div>
-<div class="flashsale">
-    <div class="flashsale-content">
-        <div class="flashsale-content-left"></div>
-        <div class="flashsale-content-center">
-            <h4>KẾT THÚC TRONG</h4>
-            <div class="time">
-                <span id="h"></span>
-                <span id="m"></span>
-                <span id="s"></span>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-number">500+</span>
+                <span class="hero-stat-label">Sản phẩm</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">10K+</span>
+                <span class="hero-stat-label">Khách hàng</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">100%</span>
+                <span class="hero-stat-label">Chính hãng</span>
             </div>
         </div>
-        <div class="flashsale-content-right">
-            <h4>Đang diễn ra</h4>
-            <p></p>
-        </div>
     </div>
-    <div id="flashSaleContainer">
-        <i class="fa-solid fa-chevron-left flashsale-arrow left-arrow"></i>
-        <div id="flashSaleProducts">
-            <!-- Product cards will be rendered here -->
-        </div>
-        <i class="fa-solid fa-chevron-right flashsale-arrow right-arrow"></i>
-        
+    <div class="hero-visual">
+        <div class="hero-phone-glow"></div>
+        <img src="~/image/va393xgrb-removebg-preview.png" alt="iPhone" class="hero-image" />
     </div>
-</div>
-<section class="best-product">
-    <div class="best-product-content">
-        <h3>SẢN PHẨM THỊNH HÀNH</h3>
-    </div>
-    <div class="best-product-sp">
-
+    <div class="hero-scroll-indicator">
+        <span>Cuộn xuống</span>
+        <i class="fa-solid fa-chevron-down"></i>
     </div>
 </section>
-<section class="new-product">
-    <div class="new-product-content">
-        <h2>SẢN PHẨM MỚI</h2>
+
+<!-- ==================== CATEGORY SHOWCASE ==================== -->
+<section class="categories-section" id="categories-section">
+    <div class="section-header">
+        <span class="section-tag">Danh mục</span>
+        <h2 class="section-title">Khám Phá Theo Danh Mục</h2>
+        <p class="section-subtitle">Tìm sản phẩm Apple phù hợp với bạn</p>
+    </div>
+    <div class="categories-grid">
+        <a class="category-card" asp-controller="Home" asp-action="Iphonedanhmuc">
+            <div class="category-icon">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <h3>iPhone</h3>
+            <p>Flagship smartphone</p>
+            <span class="category-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="category-card" asp-controller="Home" asp-action="Laptopdanhmuc">
+            <div class="category-icon">
+                <i class="fa-solid fa-laptop"></i>
+            </div>
+            <h3>MacBook</h3>
+            <p>Laptop chuyên nghiệp</p>
+            <span class="category-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="category-card" asp-controller="Home" asp-action="Index">
+            <div class="category-icon">
+                <i class="fa-solid fa-headphones"></i>
+            </div>
+            <h3>AirPods</h3>
+            <p>Âm thanh đỉnh cao</p>
+            <span class="category-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="category-card" asp-controller="Home" asp-action="Index">
+            <div class="category-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <h3>Apple Watch</h3>
+            <p>Đồng hồ thông minh</p>
+            <span class="category-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+    </div>
+</section>
+
+<!-- ==================== FLASH SALE ==================== -->
+<section class="flashsale-section" id="flashsale-section">
+    <div class="flashsale-header">
+        <div class="flashsale-header-left">
+            <div class="flashsale-badge">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Flash Sale</span>
+            </div>
+            <h2 class="flashsale-title">Ưu Đãi Sốc</h2>
+        </div>
+        <div class="flashsale-header-center">
+            <span class="countdown-label">Kết thúc trong</span>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="h">00</span>
+                    <span class="countdown-unit">Giờ</span>
+                </div>
+                <span class="countdown-separator">:</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="m">00</span>
+                    <span class="countdown-unit">Phút</span>
+                </div>
+                <span class="countdown-separator">:</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="s">00</span>
+                    <span class="countdown-unit">Giây</span>
+                </div>
+            </div>
+        </div>
+        <div class="flashsale-header-right">
+            <span class="flashsale-status">
+                <span class="flashsale-status-dot"></span>
+                Đang diễn ra
+            </span>
+        </div>
+    </div>
+    <div class="flashsale-container" id="flashSaleContainer">
+        <button class="flashsale-nav flashsale-nav-left" id="flashsaleNavLeft">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="flashsale-products" id="flashSaleProducts">
+            <!-- Product cards will be rendered here -->
+        </div>
+        <button class="flashsale-nav flashsale-nav-right" id="flashsaleNavRight">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+
+<!-- ==================== TRENDING PRODUCTS ==================== -->
+<section class="trending-section" id="trending-section">
+    <div class="section-header">
+        <span class="section-tag">Xu hướng</span>
+        <h2 class="section-title">Sản Phẩm Thịnh Hành</h2>
+        <p class="section-subtitle">Được yêu thích nhất tại cửa hàng</p>
+    </div>
+    <div class="best-product-sp">
+        <!-- Products loaded dynamically or via ViewComponent -->
+    </div>
+</section>
+
+<!-- ==================== NEW PRODUCTS ==================== -->
+<section class="new-products-section" id="new-products-section">
+    <div class="section-header">
+        <span class="section-tag">Mới nhất</span>
+        <h2 class="section-title">Sản Phẩm Mới</h2>
+        <p class="section-subtitle">Vừa ra mắt, đừng bỏ lỡ</p>
     </div>
     <div class="new-product-sp">
-
+        <!-- Products loaded dynamically or via ViewComponent -->
     </div>
+</section>
 
+<!-- ==================== PROMO BANNER ==================== -->
+<section class="promo-banner" id="promo-banner">
+    <div class="promo-content">
+        <h2>Trải nghiệm Apple<br/><span class="gradient-text">tốt nhất tại đây</span></h2>
+        <p>Miễn phí vận chuyển toàn quốc &bull; Bảo hành chính hãng &bull; Hỗ trợ 24/7</p>
+        <a class="hero-btn hero-btn-primary" asp-controller="Home" asp-action="Index">
+            Mua sắm ngay <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
 </section>
 
 @section Scripts{
     <script src="~/js/countdown.js" asp-append-version="true"></script>
     <script src="~/js/flashsale.js" asp-append-version="true"></script>
+    <script src="~/js/homepage.js" asp-append-version="true"></script>
 }
