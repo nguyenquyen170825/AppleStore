@@ -1,0 +1,16 @@
+@model List<DUANCUAHANGAPPLE.Models.GioHang>
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/home/User/GioHang.css" asp-append-version="true" >
+}
+<div class="cart-container">
+
+    <h1>Giỏ hàng của bạn.</h1>
+    <p class="sub">Miễn phí vận chuyển cho tất cả đơn hàng Apple.</p>
+    <div id="cart-container">
+         @Html.Partial("Partial/MiniGioHang", Model)
+    </div>
+
+    </div>
+
+</div>

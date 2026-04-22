@@ -1,52 +1,177 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-  background-color:aqua !important;
-  display: inline-block;
+﻿/* ===== HEADER ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
-a {
-  color: #0077cc;
+/* ===== LOGO ===== */
+.nav-brand a {
+  font-size: 22px;
+  font-weight: 700;
+  color: black;
+  background-color: black;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: 0.3s;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.nav-brand a:hover {
+  color: #0077ff;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+/* ===== MENU ===== */
+.nav-menu {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  background-color: white;
+}
+.nav-menu button{
+  background-color: white;
+  border: none;
+  outline: none;
+  color: #1b99e2;
+}
+.nav-menu a,
+#btnCategory {
+  font-size: 15px;
+  color: #333;
+  text-decoration: none;
+  position: relative;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-.footer {
+/* underline animation */
+.nav-menu a::after,
+#btnCategory::after {
+  content: "";
   position: absolute;
+  width: 0%;
+  height: 2px;
   bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  left: 0;
+  background: #0077ff;
+  transition: 0.3s;
+  display: block;
 }
-/*custom*/
 
+.nav-menu a:hover::after,
+#btnCategory:hover::after {
+  width: 100%;
+}
+
+.nav-menu a:hover,
+#btnCategory:hover {
+  color: #0077ff;
+}
+
+/* ===== SEARCH ===== */
+.nav-search {
+  display: flex;
+  align-items: center;
+  background: #f5f5f7;
+  padding: 8px 15px;
+  border-radius: 30px;
+  transition: 0.3s;
+  width: 325px;
+}
+
+.nav-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  margin-left: 8px;
+  width: 720px;
+}
+
+.nav-search:focus-within {
+  background: #eaeaea;
+  transform: scale(1.05);
+}
+
+/* ===== ICON USER + CART ===== */
+.nav-individual {
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.nav-individual a {
+  color: #333;
+  transition: 0.3s;
+}
+
+.nav-individual a:hover {
+  color: #0077ff;
+  transform: translateY(-2px);
+}
+
+/* ===== DROPDOWN ===== */
+.menu-category {
+  position: relative;
+}
+
+#categoryDropdown {
+  position: absolute;
+  /* top: 50px; */
+  left: 0;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 20px;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* show dropdown */
+.menu-category:hover #categoryDropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ===== MENU GRID ===== */
+.mega-menu {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.menu-item a {
+  display: block;
+  padding: 8px;
+  border-radius: 8px;
+  color: #333;
+  transition: 0.3s;
+}
+
+.menu-item a:hover {
+  background: #f2f2f2;
+  transform: translateX(5px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+  }
+
+  .nav-search input {
+    width: 100px;
+  }
+}

@@ -1,0 +1,202 @@
+@{
+    ViewData["Title"] = "Chỉnh sửa đơn hàng";
+}
+<div class="container mt-4">
+    <h2>Sửa đơn hàng: <span id="orderIdDisplay" class="text-primary"></span></h2>
+    <div class="card p-4 mb-4 shadow-sm border-0">
+        <form id="editOrderForm">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Số điện thoại</label>
+                <input type="text" id="phone" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Địa chỉ giao hàng</label>
+                <input type="text" id="address" class="form-control" />
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Trạng thái</label>
+                <select id="status" class="form-select">
+                    <option value="Chờ xác nhận">Chờ xác nhận</option>
+                    <option value="Đang giao hàng">Đang giao hàng</option>
+                    <option value="Đã giao hàng">Đã giao hàng</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" onclick="saveOrder()"><i class="fa-solid fa-save"></i> Lưu đơn hàng</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            </div>
+        </form>
+    </div>
+
+    <h3 class="mt-4 border-bottom pb-2">Chi tiết sản phẩm trong đơn</h3>
+
+    <!-- Form Thêm Sản Phẩm Mới Vào Đơn Hàng Này -->
+    <div class="card p-3 my-3 bg-light border-0 shadow-sm">
+        <h5 class="mb-3 text-success"><i class="fa-solid fa-cart-plus"></i> Thêm sản phẩm vào đơn</h5>
+        <div class="row align-items-end">
+            <div class="col-md-3 mb-2">
+                <label class="form-label small fw-bold">Nhập ID Sản phẩm</label>
+                <input type="number" id="addProductId" class="form-control" placeholder="Ví dụ: 1" />
+            </div>
+            <div class="col-md-2 mb-2">
+                <button type="button" class="btn btn-warning w-100 fw-bold" onclick="findVariants()"><i class="fa-solid fa-search"></i> Lấy phân loại</button>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label small fw-bold">Chọn Phân loại</label>
+                <select id="addVariantId" class="form-select">
+                    <option value="">-- Trống --</option>
+                </select>
+            </div>
+            <div class="col-md-2 mb-2">
+                <label class="form-label small fw-bold">Số lượng</label>
+                <input type="number" id="addQty" class="form-control" value="1" min="1" />
+            </div>
+            <div class="col-md-1 mb-2">
+                <button type="button" class="btn btn-success w-100" onclick="addNewItemToOrder()" title="Thêm vào đơn"><i class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover mt-3 bg-white shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Phân loại</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="orderItemsData">
+                <tr><td colspan="5" class="text-center">Đang tải dữ liệu...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const urlParts = window.location.pathname.split('/');
+        const orderId = urlParts[urlParts.length - 1];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            await loadOrder();
+        });
+
+        async function loadOrder() {
+            const response = await fetch(`/api/order/detail/${orderId}`);
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('orderIdDisplay').innerText = `ĐH-ĐT-${data.id}`;
+                document.getElementById('phone').value = data.sdt || '';
+                document.getElementById('address').value = data.diaChiGiaoHang || '';
+                document.getElementById('status').value = data.status || 'Chờ xử lý';
+
+                let html = '';
+                data.items.forEach(item => {
+                    html += `<tr>
+                        <td class="align-middle">${item.tenSanPham}</td>
+                        <td class="align-middle">${item.mau} - ${item.dungLuong}</td>
+                        <td class="align-middle text-danger fw-bold">${item.unitPrice.toLocaleString('vi-VN')} VNĐ</td>
+                        <td class="align-middle">${item.quantity}</td>
+                        <td class="align-middle">
+                            <a href="/Order/EditOrderItem/${orderId}/${item.bienTheID}" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen-to-square"></i> Sửa SL</a>
+                            <button onclick="deleteItem(${item.bienTheID})" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i> Xóa</button>
+                        </td>
+                    </tr>`;
+                });
+                if(data.items.length === 0) {
+                    html = `<tr><td colspan="5" class="text-center text-muted">Đơn hàng không có sản phẩm nào.</td></tr>`;
+                }
+                document.getElementById('orderItemsData').innerHTML = html;
+            }
+        }
+
+        async function saveOrder() {
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const status = document.getElementById('status').value;
+
+            const order = {
+                phoneNumber: phone,
+                shippingAddress: address,
+                status: status
+            };
+
+            const res = await fetch(`/api/order/${orderId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(order)
+            });
+
+            if (res.ok) {
+                alert("Cập nhật đơn hàng thành công!");
+                window.location.href = "/Order/Index";
+            } else {
+                alert("Cập nhật thất bại!");
+            }
+        }
+
+        async function deleteItem(bienTheId) {
+            if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi đơn hàng?")) return;
+            const res = await fetch(`/api/order/${orderId}/item/${bienTheId}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Đã xóa sản phẩm khỏi đơn hàng!");
+                loadOrder();
+            } else {
+                alert("Lỗi khi xóa!");
+            }
+        }
+
+        async function findVariants() {
+            const pId = document.getElementById('addProductId').value;
+            if (!pId) { alert("Vui lòng nhập ID Sản phẩm!"); return; }
+            
+            const res = await fetch(`/api/product/${pId}`);
+            if (res.ok) {
+                const data = await res.json();
+                const select = document.getElementById('addVariantId');
+                select.innerHTML = '';
+                
+                if (!data.bienThes || data.bienThes.length === 0) {
+                    select.innerHTML = '<option value="">Không có biến thể</option>';
+                    return;
+                }
+
+                data.bienThes.forEach(v => {
+                    select.innerHTML += `<option value="${v.bienTheId}" data-price="${v.gia}">${data.tenSanPham} - ${v.mau || ''} ${v.dungLuong || ''} (${v.gia.toLocaleString('vi-VN')}đ)</option>`;
+                });
+            } else {
+                alert('Không tìm thấy sản phẩm với ID này!');
+            }
+        }
+
+        async function addNewItemToOrder() {
+            const select = document.getElementById('addVariantId');
+            const bienTheId = parseInt(select.value);
+            const qty = parseInt(document.getElementById('addQty').value);
+            
+            if (!bienTheId || isNaN(bienTheId)) { alert("Vui lòng tìm và chọn một phân loại sản phẩm!"); return; }
+            if (qty < 1) { alert("Số lượng phải lớn hơn 0!"); return; }
+            
+            const selectedOption = select.options[select.selectedIndex];
+            const unitPrice = parseInt(selectedOption.getAttribute('data-price'));
+
+            const payload = { bienTheId: bienTheId, quantity: qty, unitPrice: unitPrice };
+
+            const res = await fetch(`/api/order/${orderId}/item`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+            if (res.ok) {
+                alert('Đã thêm sản phẩm vào đơn hàng!');
+                document.getElementById('addProductId').value = '';
+                select.innerHTML = '<option value="">-- Trống --</option>';
+                document.getElementById('addQty').value = '1';
+                loadOrder(); // Tải lại bảng chi tiết
+            } else {
+                alert('Lỗi khi thêm sản phẩm vào đơn!');
+            }
+        }
+    </script>
+}

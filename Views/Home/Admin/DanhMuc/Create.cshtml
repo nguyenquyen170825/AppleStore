@@ -1,0 +1,105 @@
+
+@model DUANCUAHANGAPPLE.ViewModels.DanhMucVM
+@{
+    ViewData["Title"] = "Thêm danh mục mới";
+}
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" href="/DanhMuc/Index">
+            Quay lại
+        </a>
+        <h3>Thêm danh mục mới</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="createDanhMucForm">
+            <div class="form-group">
+                <label>Tên danh mục (*)</label>
+                <input  asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required placeholder="Nhập tên danh mục..." />
+                <span asp-validation-for="TenDanhMuc" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái</label>
+                <select asp-for="TrangThai" id="trangThai" class="form-control">
+                    <option value="true">Hoạt động</option>
+                    <option value="false">Tạm ẩn</option>
+                </select>
+                <span asp-validation-for="TrangThai" class="text-danger" style="color:red; font-size:14px;"></span>
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Lưu danh mục</button>
+        </form>
+    </div>
+</div>
+
+ @section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dữ liệu này trong thực tế có thể được gọi từ một API, ví dụ: fetch('/api/lookup/statuses')
+            const statusOptions = [
+                { value: 'true', text: 'Hoạt động' },
+                { value: 'false', text: 'Tạm ẩn' }
+            ];
+
+            const trangThaiSelect = document.getElementById('trangThai');
+            trangThaiSelect.innerHTML = ''; // Xóa các option cũ
+
+            // Thêm các option mới từ dữ liệu
+            statusOptions.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = item.text;
+                trangThaiSelect.appendChild(option);
+            });
+        });
+
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        document.getElementById('createDanhMucForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // Ngăn form tự động reload trang
+            document.getElementById('message').style.display = 'none';
+
+            const danhMucData = {
+                tenDanhMuc: document.getElementById('tenDanhMuc').value,
+                trangThai: document.getElementById('trangThai').value === 'true'
+            };
+
+            try {
+                const response = await fetch('/api/danhmuc', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(danhMucData)
+                });
+
+                if (response.ok) {
+                    showMessage('Thêm danh mục thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = '/DanhMuc/Index'; // Chuyển hướng về trang danh sách
+                    }, 1000);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Lỗi Validation:", errorData);
+                    showMessage('Thêm thất bại! Vui lòng kiểm tra lại thông tin.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi gọi API:', error);
+                showMessage('Lỗi kết nối đến máy chủ!');
+            }
+        });
+    </script>
+}

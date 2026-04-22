@@ -1,0 +1,245 @@
+/* --- Bố cục tổng thể (main layout) --- */
+.main {
+    padding: 30px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1d1d1f;
+    background-color: #f5f5f7; /* Màu xám nhạt sang trọng */
+    min-height: 100vh;
+}
+
+/* --- Tiêu đề các mục (Section headers) --- */
+.section-header {
+    margin-top: 40px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #d2d2d7;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+}
+
+/* --- Khu vực thống kê (Stats container) --- */
+.stats-container {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    margin-top: 15px;
+}
+
+.stat-box {
+    flex: 1;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    text-align: left; /* Căn trái nhìn chuyên nghiệp hơn */
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Thêm dải màu nhấn ở mép trái của từng hộp */
+.stat-box::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+}
+
+.stat-box.success::before { background: #34c759; }
+.stat-box.delivering::before { background: #ff9f0a; }
+.stat-box.canceled::before { background: #ff3b30; }
+.stat-box.total::before { background: #007aff; }
+
+/* Bỏ viền màu cũ, chuyển sang màu chữ */
+.stat-box.success, .stat-box.delivering, .stat-box.canceled, .stat-box.total {
+    border-left: none; 
+    background: #ffffff;
+}
+
+.stat-box h4 { 
+    margin: 0; 
+    font-size: 14px; 
+    font-weight: 600; 
+    color: #86868b !important; /* Xám trung tính */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-box h2 { 
+    margin: 12px 0 0 0; 
+    font-size: 38px; 
+    font-weight: 700; 
+    letter-spacing: -1px;
+}
+
+/* Ghi đè màu sắc các con số cho đồng bộ */
+.stat-box.success h2 { color: #34c759 !important; }
+.stat-box.delivering h2 { color: #ff9f0a !important; }
+.stat-box.canceled h2 { color: #ff3b30 !important; }
+.stat-box.total h2 { color: #007aff !important; }
+
+
+/* --- Bảng dữ liệu (Tables) --- */
+.table-wrapper {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    overflow-x: auto;
+    margin-bottom: 40px;
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px; 
+}
+
+thead {
+    background-color: #ffffff;
+}
+
+th {
+    font-weight: 600;
+    color: #86868b;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #f5f5f7;
+    padding: 20px 16px;
+}
+
+td {
+    padding: 16px;
+    font-size: 14px;
+    color: #1d1d1f;
+    font-weight: 500;
+    border-bottom: 1px solid #f5f5f7;
+    vertical-align: middle;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #f5f5f9;
+}
+
+/* --- Dropdown chọn trạng thái (Select box) --- */
+.form-control {
+    width: 100%;
+    min-width: 140px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1d1d1f;
+    background-color: #f5f5f7;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none; /* Xóa style mặc định của trình duyệt */
+}
+
+.form-control:hover {
+    background-color: #e8e8ed;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007aff;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* --- Nút thao tác (Action buttons) --- */
+td:last-child {
+    white-space: nowrap;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+button i {
+    font-size: 14px;
+}
+
+/* Phong cách nút Pastel hiện đại */
+.detail-btn {
+    background-color: #f0f9ff;
+    color: #0284c7;
+}
+
+.detail-btn:hover {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.btn-edit {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.btn-edit:hover {
+    background-color: #fde68a;
+    color: #b45309;
+}
+
+.btn-delete {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.btn-delete:hover {
+    background-color: #fecaca;
+    color: #b91c1c;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .stats-container {
+        flex-wrap: wrap;
+    }
+    .stat-box {
+        flex: 1 1 calc(50% - 24px); 
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-box {
+        flex: 1 1 100%; 
+    }
+    .main {
+        padding: 15px;
+    }
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+}

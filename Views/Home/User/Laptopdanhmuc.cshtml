@@ -1,0 +1,93 @@
+@model List<DUANCUAHANGAPPLE.Models.SanPham>
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/home/User/Iphonedanhmuc.css">
+    <link rel="stylesheet" href="~/css/home/User/ProductCartLaptop.css" />
+}
+
+<!-- BREADCRUMB -->
+<nav class="breadcrumb">
+    <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+    <span>/</span>
+    <a asp-controller="Product" asp-action="Category" asp-route-id="1">Danh mục</a>
+    <span>/</span>
+    <span class="active">Laptop</span>
+</nav>
+
+<!-- CATEGORY HEADER -->
+<header class="category-header">
+    <h1>Laptop</h1>
+    <p>
+        Khám phá các dòng iPhone mới nhất với hiệu năng đỉnh cao,
+        hệ thống camera chuyên nghiệp và thiết kế sang trọng.
+    </p>
+</header>
+
+<main class="category-container">
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+
+        @await Component.InvokeAsync("Filter", new {
+        title = "Khoảng giá",
+        options = new List<string> { "Dưới 10tr", "10tr - 20tr", "Trên 20tr" }
+        })
+
+        @await Component.InvokeAsync("Filter", new {
+            title = "Dung lượng",
+            options = new List<string> { "64GB", "128GB", "256GB", "512GB" }
+        })
+
+        @await Component.InvokeAsync("Filter", new {
+            title = "Màu sắc",
+            options = new List<string> { "Đen", "Trắng", "Xanh", "Vàng" }
+        })
+
+        @await Component.InvokeAsync("Filter", new {
+            title = "Đánh giá",
+            options = new List<string> { "5 sao", "4 sao trở lên", "3 sao trở lên" }
+        })
+
+        <div class="filter">
+            <button class="filter-chip" onclick="toggleMenu(this)">
+                Xóa tất cả
+            </button>
+        </div>
+
+    </div>
+    <!-- TOPBAR -->
+    <div class="category-topbar">
+
+        <p>
+            Hiển thị <b>@Model.Count</b> sản phẩm
+        </p>
+
+        <select class="sort-select">
+            <option>Giá thấp → cao</option>
+            <option>Giá cao → thấp</option>
+        </select>
+
+    </div>
+
+
+    <!-- PRODUCT GRID -->
+    <div class="product-grid">
+        @Html.Partial("Partial/ProductCartLaptop", Model)
+    </div>
+
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+
+        <button class="page-btn">‹</button>
+
+        <a class="page active">1</a>
+        <a class="page">2</a>
+        <a class="page">3</a>
+
+        <button class="page-btn">›</button>
+
+    </div>
+
+</main>
+</main>

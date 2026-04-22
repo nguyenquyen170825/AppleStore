@@ -1,0 +1,148 @@
+@model DUANCUAHANGAPPLE.Models.New
+@{
+    ViewData["Title"] = "Thêm bài viết mới";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" href="/News/Index">
+            &laquo; Quay lại
+        </a>
+        <h3>Thêm bài viết mới</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="createNewsForm">
+            <div class="form-group">
+                <label>Tiêu đề (*)</label>
+                <input asp-for="Tieude" type="text" id="tieude" class="form-control" required placeholder="Nhập tiêu đề bài viết..." />
+            </div>
+
+            <div class="form-group">
+                <label>Đường dẫn (Link) (*)</label>
+                <input asp-for="Link" type="text" id="link" class="form-control" required placeholder="Ví dụ: tin-tuc-apple-moi-nhat" />
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả ngắn (*)</label>
+                <textarea asp-for="Motangan" id="motangan" class="form-control" rows="4" required placeholder="Nhập tóm tắt nội dung bài viết..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Hình ảnh đại diện (*)</label>
+                <input type="file" id="imageUpload" class="form-control" accept="image/*" />
+
+                <input type="hidden" id="imageUrl" required />
+
+                <div id="imagePreviewContainer" style="margin-top: 10px; display: none;">
+                    <img id="imagePreview" src="" alt="Xem trước ảnh" style="max-width: 200px; height: auto; border-radius: 6px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nguồn / Tác giả (*)</label>
+                <input asp-for="Source" type="text" id="source" class="form-control" required placeholder="Nhập nguồn bài viết (VD: Apple News)..." />
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Lưu bài viết</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        // ==========================================
+        // XỬ LÝ SỰ KIỆN UPLOAD ẢNH LÊN SERVER
+        // ==========================================
+        document.getElementById('imageUpload').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Đóng gói file vào FormData để gửi đi
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // Gọi API Upload bạn đã viết trong NewsController
+                const response = await fetch('/api/news/upload', {
+                    method: 'POST',
+                    body: formData // Không set Content-Type, trình duyệt sẽ tự động thiết lập boundary cho file
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // 1. Lưu URL server trả về vào input ẩn
+                    document.getElementById('imageUrl').value = data.url;
+
+                    // 2. Hiển thị ảnh xem trước cho người dùng
+                    const previewImg = document.getElementById('imagePreview');
+                    previewImg.src = data.url;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+
+                    showMessage('Tải ảnh lên thành công!', true);
+                } else {
+                    showMessage('Lỗi khi tải ảnh lên server.');
+                }
+            } catch (error) {
+                console.error("Lỗi upload:", error);
+                showMessage('Lỗi kết nối khi tải ảnh!');
+            }
+        });
+
+        // ==========================================
+        // XỬ LÝ LƯU BÀI VIẾT
+        // ==========================================
+        document.getElementById('createNewsForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.getElementById('message').style.display = 'none';
+
+            const urlAnh = document.getElementById('imageUrl').value.trim();
+            if (!urlAnh) {
+                showMessage("Vui lòng chọn và tải lên một hình ảnh đại diện!");
+                return;
+            }
+
+            const newsData = {
+                tieude: document.getElementById('tieude').value.trim(),
+                link: document.getElementById('link').value.trim(),
+                motangan: document.getElementById('motangan').value.trim(),
+                imageUrl: urlAnh, // Lấy URL từ thẻ input ẩn
+                source: document.getElementById('source').value.trim(),
+                ngaytao: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch('/api/news', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newsData)
+                });
+
+                if (response.ok) {
+                    showMessage('Thêm bài viết thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = '/News/Index';
+                    }, 1000);
+                } else {
+                    showMessage('Thêm thất bại! Vui lòng kiểm tra lại thông tin.');
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối đến máy chủ!');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,15 @@
+@model DUANCUAHANGAPPLE.ViewComponents.FilterModel
+
+<div class="filter">
+    <button class="filter-chip">
+        @Model.Title
+        <span>▼</span>
+    </button>
+
+    <div class="filter-menu">
+        @foreach(var item in Model.Options)
+        {
+            <div>@item</div>
+        }
+    </div>
+</div>

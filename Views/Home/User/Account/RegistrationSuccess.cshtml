@@ -1,0 +1,127 @@
+@{
+    Layout = "_Layout";
+    ViewData["HideFooter"] = true;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/home/User/Register.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .success-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px #7ac142;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+            background: #28a745;
+        }
+
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #28a745;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @@keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @@keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @@keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 40px #28a745;
+            }
+        }
+
+        .success-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-msg {
+            font-size: 18px;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .details-text {
+            color: #86868b;
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .btn-login {
+            display: inline-block;
+            background: #0071e3;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-login:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 113, 227, 0.2);
+        }
+    </style>
+}
+
+<div class="page-wrapper animated-fade-in">
+    <div class="register-container animated-scale-in">
+        <div class="auth-card success-card">
+            <div class="success-icon-wrapper">
+                <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+
+            <h1 class="title">Đăng ký thành công!</h1>
+            <p class="welcome-msg">Chào mừng, @ViewBag.FullName</p>
+            <p class="details-text">
+                Tài khoản của bạn đã được thiết lập sẵn sàng. <br>
+                Hãy đăng nhập để bắt đầu khám phá các sản phẩm công nghệ mới nhất.
+            </p>
+
+            <a asp-controller="Home" asp-action="Login" class="btn-login animated-press">Đăng nhập ngay</a>
+        </div>
+    </div>
+</div>

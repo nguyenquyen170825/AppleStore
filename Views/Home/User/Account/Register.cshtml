@@ -1,0 +1,99 @@
+@{
+    Layout = "_Layout";
+    ViewData["HideFooter"] = true;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/home/User/Register.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-error animated-fade-in" style="background: rgba(255, 59, 48, 0.1); color: #ff3b30; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 14px; border: 1px solid rgba(255, 59, 48, 0.2);">
+        <i class="fa-solid fa-circle-exclamation"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="page-wrapper animated-fade-in">
+    <div class="register-container animated-scale-in">
+        <div class="auth-card">
+            <h1 class="title">Đăng ký tài khoản</h1>
+            <p class="subtitle">Tham gia cộng đồng TechStore ngay hôm nay</p>
+
+            <form asp-controller="Register" asp-action="Register" method="post" id="registerForm">
+                <div id="info-step">
+                    <div class="form-group">
+                        <label>HỌ VÀ TÊN</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-user icon-prefix"></i>
+                            <input type="text" name="fullname" placeholder="Nguyễn Văn A" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>EMAIL</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-envelope icon-prefix"></i>
+                            <input type="email" name="email" placeholder="example@gmail.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>MẬT KHẨU</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-lock icon-prefix"></i>
+                            <input type="password" name="password" id="password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye eye-toggle animated-hover" onclick="togglePassword(this)"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>XÁC NHẬN MẬT KHẨU</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-key icon-prefix"></i>
+                            <input type="password" name="confirmPassword" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye eye-toggle animated-hover" onclick="togglePassword(this)"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit animated-press">Tiếp tục</button>
+                </div>
+            </form>
+
+            <script>
+                function togglePassword(icon) {
+                    const input = icon.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                }
+            </script>
+
+            <div class="separator">
+                <span>HOẶC ĐĂNG KÝ BẰNG</span>
+            </div>
+
+            <div class="social-actions">
+                <a asp-controller="Account" asp-action="ExternalLogin" asp-route-provider="Google" class="social-btn google animated-hover animated-press" style="text-decoration: none; display: flex; justify-content: center; align-items: center;color:black;">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google">
+                    Google
+                </a>
+                <a asp-controller="Account" asp-action="ExternalLogin" asp-route-provider="Facebook" class="social-btn facebook animated-hover animated-press" style="text-decoration: none; display: flex; justify-content: center; align-items: center;color:black;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook">
+                    Facebook
+                </a>
+            </div>
+        </div>
+        <p class="bottom-text">
+            Đã có tài khoản? <a asp-controller="Home" asp-action="Login" class="animated-underline">Đăng nhập ngay</a>
+        </p>
+    </div>
+</div>
+

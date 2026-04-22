@@ -1,3 +1,121 @@
 @section Styles {
-    <link rel="stylesheet" href="~/css/home/privacy.css" />
+    <link rel="stylesheet" href="~/css/home/User/privacy.css" />
+}
+<main class="policy-wrapper">
+    <header class="policy-header">
+        <h1>Chính sách & Điều khoản</h1>
+        <p>
+            Cam kết mang đến trải nghiệm mua sắm minh bạch, an toàn và dịch vụ hậu mãi chuẩn mực nhất.
+        </p>
+    </header>
+
+    <div class="policy-grid">
+
+        <!-- SIDEBAR -->
+        <aside class="policy-sidebar">
+            <nav class="sticky-sidebar">
+                <ul>
+                    <li><a class="active" href="#bao-hanh">Chính sách bảo hành</a></li>
+                    <li><a href="#doi-tra">Chính sách đổi trả</a></li>
+                    <li><a href="#van-chuyen">Chính sách vận chuyển</a></li>
+                    <li><a href="#thanh-toan">Chính sách thanh toán</a></li>
+                    <li><a href="#bao-mat">Chính sách bảo mật</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- CONTENT -->
+        <div class="policy-content">
+
+            <!-- BẢO HÀNH -->
+            <section id="bao-hanh" class="policy-card">
+                <h2>Chính sách bảo hành</h2>
+                <p>
+                    Tất cả sản phẩm Apple được bảo hành chính hãng 12 tháng kể từ ngày kích hoạt.
+                </p>
+
+                <ul>
+                    <li>Bảo hành lỗi từ nhà sản xuất</li>
+                    <li>Thay thế linh kiện chính hãng</li>
+                    <li>Vệ sinh và kiểm tra định kỳ miễn phí</li>
+                </ul>
+
+                <b>Lưu ý:</b> Không áp dụng cho rơi vỡ, vào nước.
+            </section>
+
+            <!-- ĐỔI TRẢ -->
+            <section id="doi-tra" class="policy-card">
+                <h2>Chính sách đổi trả</h2>
+
+                <div class="policy-step">
+                    <span>01</span>
+                    <p>Đổi trong 30 ngày nếu lỗi kỹ thuật.</p>
+                </div>
+
+                <div class="policy-step">
+                    <span>02</span>
+                    <p>Sản phẩm còn đầy đủ hộp & phụ kiện.</p>
+                </div>
+
+                <div class="policy-step">
+                    <span>03</span>
+                    <p>Hoàn tiền 100% nếu không có máy thay thế.</p>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="faq-section">
+                <h3>Câu hỏi thường gặp</h3>
+
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(this)">
+                        Làm sao để kiểm tra thời hạn bảo hành?
+                    </button>
+                    <div class="accordion-content">
+                        Bạn có thể vào phần Giới thiệu trên thiết bị để xem.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button onclick="toggleAccordion(this)">
+                        Tôi có thể đổi màu máy không?
+                    </button>
+                    <div class="accordion-content">
+                        Đổi trong 48h nếu chưa active.
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- SUPPORT -->
+            <section class="support-box">
+                <h3>Bạn cần hỗ trợ thêm?</h3>
+                <p>Đội ngũ CSKH luôn sẵn sàng 24/7</p>
+
+                <div class="support-grid">
+                    <div>
+                        <small>Hotline</small>
+                        <b>1900 8888</b>
+                    </div>
+
+                    <div>
+                        <small>Email</small>
+                        <b>support@store.vn</b>
+                    </div>
+                </div>
+
+                <button>Liên hệ ngay</button>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+<script>
+    function toggleAccordion(button) {
+        const item = button.parentElement;
+        item.classList.toggle("active");
+    }
+</script>
 }

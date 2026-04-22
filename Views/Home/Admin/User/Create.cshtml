@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Thêm khách hàng mới";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" href="/User/Index">
+            &laquo; Quay lại
+        </a>
+        <h3>Thêm người dùng mới</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="createUserForm">
+            <div class="form-group">
+                <label>Họ tên (*)</label>
+                <input type="text" id="fullName" class="form-control" required placeholder="Nhập họ và tên..." />
+            </div>
+
+            <div class="form-group">
+                <label>Email (*)</label>
+                <input type="email" id="email" class="form-control" required placeholder="Nhập địa chỉ email..." />
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu (*)</label>
+                <input type="password" id="password" class="form-control" required placeholder="Nhập mật khẩu..." />
+            </div>
+
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="text" id="phone" class="form-control" placeholder="Nhập số điện thoại..." />
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ</label>
+                <input type="text" id="address" class="form-control" placeholder="Nhập địa chỉ..." />
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái hồ sơ</label>
+                <select id="isProfileCompleted" class="form-control">
+                    <option value="false">Chưa hoàn tất</option>
+                    <option value="true">Hoàn tất</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Vai trò (Role)</label>
+                <select id="role" class="form-control">
+                    <option value="">-- Chọn vai trò (mặc định User) --</option>
+                    @if (ViewBag.Roles != null)
+                    {
+                        foreach (var role in ViewBag.Roles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Thêm khách hàng</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        document.getElementById('createUserForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.getElementById('message').style.display = 'none';
+
+            const userData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                isProfileCompleted: document.getElementById('isProfileCompleted').value === 'true',
+                role: document.getElementById('role').value
+            };
+
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    showMessage('Thêm khách hàng thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = '/User/Index';
+                    }, 1000);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Lỗi Validation:", errorData);
+                    showMessage('Thêm thất bại! Vui lòng kiểm tra lại thông tin.');
+                }
+            } catch (error) {
+                console.error('Lỗi API:', error);
+                showMessage('Lỗi kết nối đến máy chủ!');
+            }
+        });
+    </script>
+}

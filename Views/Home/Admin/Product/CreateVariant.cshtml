@@ -1,0 +1,151 @@
+@{
+    ViewData["Title"] = "Thêm biến thể mới";
+}
+
+@section Styles {
+ 
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" id="btnBack" href="#">
+            &laquo; Quay lại
+        </a>
+        <h3>Thêm biến thể sản phẩm</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="createVariantForm">
+            <input type="hidden" id="sanPhamId" value="@ViewBag.ProductId" />
+            <div class="form-group">
+                <label>Sku (*)</label>
+                <input type="text" id="sku" class="form-control" required placeholder="Nhập SKU..." />
+            </div>
+            <div class="form-group">
+                <label>Màu sắc (*)</label>
+                <input type="text" id="mau" class="form-control" required placeholder="VD: Đen, Trắng, Đỏ..." />
+            </div>
+
+            <div class="form-group">
+                <label>Dung lượng (*)</label>
+                <input type="text" id="dungLuong" class="form-control" required placeholder="VD: 64GB, 128GB..." />
+            </div>
+
+            <div class="form-group">
+                <label>Giá bán (VNĐ) (*)</label>
+                <input type="number" id="gia" class="form-control" required placeholder="Nhập giá bán..." />
+            </div>
+
+            <div class="form-group">
+                <label>Giá cũ (VNĐ)</label>
+                <input type="number" id="giaCu" class="form-control" placeholder="Nhập giá cũ (nếu có)..." />
+            </div>
+
+            <div class="form-group">
+                <label>Số lượng tồn (*)</label>
+                <input type="number" id="soLuongTon" class="form-control" required placeholder="Nhập số lượng..." />
+            </div>
+
+            <div class="form-group">
+                <label>Hình ảnh (Có thể chọn nhiều ảnh)</label>
+                <input type="file" id="hinhAnhFiles" class="form-control" accept="image/*" multiple />
+                <div id="imagePreviewContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Lưu biến thể</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const productId = document.getElementById('sanPhamId').value;
+        document.getElementById('btnBack').href = `/Product/Detail/${productId}`;
+
+        function showMessage(text, isSuccess = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        // --- XỬ LÝ CHỌN VÀ XEM TRƯỚC NHIỀU ẢNH ---
+        let selectedFiles = []; 
+
+        document.getElementById('hinhAnhFiles').addEventListener('change', function(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                selectedFiles.push(files[i]);
+            }
+            renderPreviews();
+            this.value = ''; // Reset input để người dùng ấn lần nữa không bị đè file cũ
+        });
+
+        function renderPreviews() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const url = URL.createObjectURL(file);
+                container.innerHTML += `
+                    <div style="position: relative; width: 80px; height: 80px;">
+                        <img src="${url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                        <button type="button" onclick="removeFile(${index})" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; line-height: 12px;">X</button>
+                    </div>`;
+            });
+        }
+
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+        };
+
+        document.getElementById('createVariantForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.getElementById('message').style.display = 'none';
+
+            // Sử dụng FormData để gửi file và dữ liệu
+            const formData = new FormData();
+            
+            // Thêm các trường dữ liệu vào formData
+            formData.append('sanPhamId', productId);
+            formData.append('sku', document.getElementById('sku').value);
+            formData.append('mau', document.getElementById('mau').value);
+            formData.append('dungLuong', document.getElementById('dungLuong').value);
+            formData.append('gia', document.getElementById('gia').value);
+            formData.append('giaCu', document.getElementById('giaCu').value || 0);
+            formData.append('soLuongTon', document.getElementById('soLuongTon').value);
+
+            // Thêm file ảnh (nếu có)
+            if (selectedFiles.length > 0) {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    formData.append('HinhAnhFiles', selectedFiles[i]);
+                }
+            }
+
+            try {
+                const response = await fetch('/api/variant', {
+                    method: 'POST',
+                    // Không cần 'Content-Type', trình duyệt sẽ tự đặt là 'multipart/form-data'
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showMessage('Thêm biến thể thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = `/Product/Detail/${productId}`;
+                    }, 1000);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Lỗi Validation:", errorData);
+                    showMessage('Thêm thất bại! Vui lòng kiểm tra lại thông tin nhập.');
+                }
+            } catch (error) {
+                console.error('Lỗi API:', error);
+                showMessage('Lỗi kết nối đến máy chủ!');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,215 @@
+@{
+    ViewData["Title"] = "Chỉnh sửa biến thể";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+    <style>
+        .current-img { margin-top: 10px; display: block; max-width: 150px; border-radius: 5px; border: 1px solid #ddd; }
+    </style>
+}
+
+<div class="main">
+    <div class="header">
+        <a class="btn-back" id="btnBack" href="#">
+            &laquo; Quay lại
+        </a>
+        <h3>Chỉnh sửa biến thể sản phẩm</h3>
+    </div>
+
+    <div class="form-container">
+        <form id="editVariantForm">
+            <input type="hidden" id="variantId" value="@ViewBag.VariantId" />
+            <input type="hidden" id="sanPhamId" />
+            <div class="form-group">
+                <label>Sku (*)</label>
+                <input type="text" id="sku" class="form-control" required placeholder="VD IP15-DO-256-NEW" />
+            </div>
+            <div class="form-group">
+                <label>Màu sắc (*)</label>
+                <input type="text" id="mau" class="form-control" required placeholder="VD: Đen, Trắng, Đỏ..." />
+            </div>
+
+            <div class="form-group">
+                <label>Dung lượng (*)</label>
+                <input type="text" id="dungLuong" class="form-control" required placeholder="VD: 64GB, 128GB..." />
+            </div>
+
+            <div class="form-group">
+                <label>Giá bán (VNĐ) (*)</label>
+                <input type="number" id="gia" class="form-control" required placeholder="Nhập giá bán..." />
+            </div>
+
+            <div class="form-group">
+                <label>Giá cũ (VNĐ)</label>
+                <input type="number" id="giaCu" class="form-control" placeholder="Nhập giá cũ (nếu có)..." />
+            </div>
+
+            <div class="form-group">
+                <label>Số lượng tồn (*)</label>
+                <input type="number" id="soLuongTon" class="form-control" required placeholder="Nhập số lượng..." />
+            </div>
+
+            <div class="form-group">
+                <label>Hình ảnh (Để trống nếu giữ nguyên, có thể chọn nhiều ảnh để thêm vào)</label>
+                <input type="file" id="hinhAnhFiles" class="form-control" accept="image/*" multiple />
+                <div id="currentImageContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+                <div id="newImagePreviewContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+            </div>
+
+            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
+
+            <button type="submit" class="add-btn">Cập nhật biến thể</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const variantId = document.getElementById('variantId').value;
+        const msgDiv = document.getElementById('message');
+
+        function showMessage(text, isSuccess = false) {
+            msgDiv.textContent = text;
+            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
+            msgDiv.style.display = 'block';
+        }
+
+        // --- XỬ LÝ CHỌN VÀ XEM TRƯỚC ẢNH MỚI SẼ THÊM ---
+        let selectedFiles = []; 
+
+        document.getElementById('hinhAnhFiles').addEventListener('change', function(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                selectedFiles.push(files[i]);
+            }
+            renderPreviews();
+            this.value = ''; // Reset input để chọn tiếp đợt ảnh khác
+        });
+
+        function renderPreviews() {
+            const container = document.getElementById('newImagePreviewContainer');
+            container.innerHTML = selectedFiles.length > 0 ? '<small style="width: 100%; color: #007bff; font-weight: bold;">Ảnh chuẩn bị thêm mới:</small>' : '';
+            selectedFiles.forEach((file, index) => {
+                const url = URL.createObjectURL(file);
+                container.innerHTML += `
+                    <div style="position: relative; width: 80px; height: 80px;">
+                        <img src="${url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 2px dashed #007bff;">
+                        <button type="button" onclick="removeFile(${index})" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; line-height: 12px;">X</button>
+                    </div>`;
+            });
+        }
+
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+        };
+
+        // 1. Tải dữ liệu cũ khi load trang
+        async function loadVariantData() {
+            try {
+                const response = await fetch(`/api/variant/${variantId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Đổ dữ liệu vào form
+                    document.getElementById('sanPhamId').value = data.sanPhamId;
+                    document.getElementById('sku').value = data.sku;
+                    document.getElementById('mau').value = data.mau;
+                    document.getElementById('dungLuong').value = data.dungLuong;
+                    document.getElementById('gia').value = data.gia;
+                    document.getElementById('giaCu').value = data.giaCu;
+                    document.getElementById('soLuongTon').value = data.soLuongTon;
+                    
+                    // Nút quay lại sản phẩm
+                    document.getElementById('btnBack').href = `/Product/Detail/${data.sanPhamId}`;
+
+                    // Hiển thị ảnh hiện tại
+                    if (data.hinhAnhs && data.hinhAnhs.length > 0) {
+                        let imgsHtml = '<small style="width: 100%; color: #666; font-style: italic; margin-bottom: 5px; display: block;">Ảnh hiện tại (Nhấn X để xóa):</small>';
+                        data.hinhAnhs.forEach(img => {
+                            imgsHtml += `
+                                <div id="old-img-${img.id}" style="position: relative; display: inline-block;">
+                                    <img src="${img.url}" class="current-img" style="width: 80px; height: 80px; object-fit: cover; margin-top: 0;">
+                                    <button type="button" onclick="deleteOldImage(${img.id})" style="position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; line-height: 12px;" title="Xóa ảnh này">X</button>
+                                </div>`;
+                        });
+                        document.getElementById('currentImageContainer').innerHTML = imgsHtml;
+                    }
+                } else {
+                    showMessage("Không tìm thấy dữ liệu biến thể!");
+                }
+            } catch (error) {
+                console.error("Lỗi load data:", error);
+            }
+        }
+
+        // Gọi hàm load ngay khi trang chạy
+        loadVariantData();
+
+        // 1.5 Hàm xóa ảnh cũ
+        async function deleteOldImage(imageId) {
+            if (!confirm("Bạn có chắc muốn xóa ảnh này không? Hành động này không thể hoàn tác.")) return;
+            
+            try {
+                const response = await fetch(`/api/picture/${imageId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    document.getElementById(`old-img-${imageId}`).remove();
+                    showMessage("Đã xóa ảnh thành công!", true);
+                } else {
+                    showMessage("Xóa ảnh thất bại. Vui lòng thử lại.");
+                }
+            } catch (error) {
+                console.error("Lỗi xóa ảnh:", error);
+                showMessage("Lỗi kết nối khi xóa ảnh.");
+            }
+        }
+
+        // 2. Xử lý Submit Form
+        document.getElementById('editVariantForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            msgDiv.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('id', variantId); // Quan trọng để Backend biết sửa bản ghi nào
+            formData.append('sanPhamId', document.getElementById('sanPhamId').value);
+            formData.append('sku', document.getElementById('sku').value);
+            formData.append('mau', document.getElementById('mau').value);
+            formData.append('dungLuong', document.getElementById('dungLuong').value);
+            formData.append('gia', document.getElementById('gia').value);
+            formData.append('giaCu', document.getElementById('giaCu').value || 0);
+            formData.append('soLuongTon', document.getElementById('soLuongTon').value);
+
+            if (selectedFiles.length > 0) {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    formData.append('HinhAnhFiles', selectedFiles[i]);
+                }
+            }
+
+            try {
+                // Tùy vào API của bạn dùng PUT hoặc POST để update
+                const response = await fetch(`/api/variant/${variantId}`, {
+                    method: 'PUT', // Hoặc 'POST' tùy cấu hình API
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showMessage('Cập nhật thành công!', true);
+                    setTimeout(() => {
+                        window.location.href = `/Product/Detail/${document.getElementById('sanPhamId').value}`;
+                    }, 1000);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Lỗi:", errorData);
+                    showMessage('Cập nhật thất bại! Vui lòng thử lại.');
+                }
+            } catch (error) {
+                console.error('Lỗi API:', error);
+                showMessage('Lỗi kết nối đến máy chủ!');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,487 @@
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/order.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/productdetail.css" asp-append-version="true" />
+}
+
+<div class="main">
+    <div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Sản phẩm: <span id="productNameDisplay">...</span></h3>
+        <button onclick="location.href='/Product/Index'">← Danh sách sản phẩm</button>
+    </div>
+
+    <div class="order-info-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4>Thông số kỹ thuật</h4>
+            <button class="btn-update" onclick="toggleEditSpecs()">Chỉnh sửa thông số</button>
+        </div>
+        
+        <div id="specsViewMode" class="tech-specs-grid"></div>
+
+        <form id="specsEditMode" style="display:none;" class="edit-section">
+            <input type="hidden" id="spec_ThongSoId">
+            <div class="tech-specs-grid" style="width:100%">
+                <div><label>Màn hình</label><input type="text" id="spec_ManHinh"></div>
+                <div><label>Chipset</label><input type="text" id="spec_Chipset"></div>
+                <div><label>RAM</label><input type="text" id="spec_Ram"></div>
+                <div><label>Bộ nhớ</label><input type="text" id="spec_BoNho"></div>
+                <div><label>Pin</label><input type="text" id="spec_Pin"></div>
+                <div><label>Cổng sạc</label><input type="text" id="spec_CongSac"></div>
+            </div>
+            <div style="width:100%; text-align:right; margin-top:10px;">
+                <button type="button" onclick="toggleEditSpecs()">Hủy</button>
+                <button type="button" class="btn-save" onclick="saveSpecs()">Cập nhật thông số</button>
+            </div>
+        </form>
+    </div>
+
+   <div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+    <h3>Danh sách biến thể hiện có</h3>
+    <button class="btn-save" onclick="openCreateVariantModal()">+ Thêm biến thể</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ảnh / Slide</th>
+                    <th>Màu / Dung lượng</th>
+                    <th>Giá / Tồn</th>
+                    <th>SKU</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="variantData"></tbody>
+        </table>
+    </div>
+
+    <div id="variantPagination"></div>
+</div>
+
+<!-- Modal Thêm/Sửa Biến thể (Hỗ trợ nhiều ảnh) -->
+<div class="modal fade" id="variantModal" tabindex="-1" aria-labelledby="variantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="variantModalLabel">Thêm biến thể</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="variantForm">
+                    <input type="hidden" id="var_BienTheId" value="0" />
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">SKU (*)</label>
+                            <input type="text" class="form-control" id="var_Sku" required placeholder="VD: IP15-DO-256">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Màu sắc (*)</label>
+                            <input type="text" class="form-control" id="var_Mau" required placeholder="VD: Đỏ, Xanh...">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Dung lượng (*)</label>
+                            <input type="text" class="form-control" id="var_DungLuong" required placeholder="VD: 128GB, 256GB...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">RAM</label>
+                            <input type="text" class="form-control" id="var_Ram" placeholder="VD: 8GB...">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Giá bán (VNĐ) (*)</label>
+                            <input type="number" class="form-control" id="var_Gia" required min="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Giá cũ (VNĐ)</label>
+                            <input type="number" class="form-control" id="var_GiaCu" min="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Số lượng tồn (*)</label>
+                            <input type="number" class="form-control" id="var_SoLuongTon" required min="0">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Hình ảnh (Có thể chọn nhiều ảnh)</label>
+                            <input type="file" class="form-control" id="var_HinhAnhFiles" accept="image/*" multiple>
+                            <div id="currentImageContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+                            <div id="newImagePreviewContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveVariant()"></i> Lưu biến thể</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+let currentProductId = window.location.pathname.split('/').pop();
+let allVariants = [];
+let currentVariantPage = 1;
+const variantsPerPage = 5; // Số lượng biến thể hiển thị trên mỗi trang
+let selectedFiles = []; // Mảng chứa các file ảnh được chọn thêm mới
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadProductDetail(currentProductId);
+    
+    // Lắng nghe sự kiện chọn nhiều ảnh
+    document.getElementById('var_HinhAnhFiles').addEventListener('change', function(e) {
+        const files = e.target.files;
+        for (let i = 0; i < files.length; i++) {
+            selectedFiles.push(files[i]);
+        }
+        renderPreviews();
+        this.value = ''; // Reset input để cho phép chọn lại cùng 1 file nếu cần
+    });
+});
+
+async function loadProductDetail(id) {
+    const res = await fetch(`/api/product/${id}`);
+    const data = await res.json();
+
+    document.getElementById('productNameDisplay').innerText = data.tenSanPham;
+
+    // RENDER THÔNG SỐ
+    renderSpecs(data.thongSo);
+
+    // RENDER BIẾN THỂ
+    allVariants = data.bienThes || [];
+    currentVariantPage = 1;
+    renderVariantPage();
+}
+
+// ======================== PHẦN THÔNG SỐ KỸ THUẬT ========================
+
+function renderSpecs(specs) {
+    const container = document.getElementById('specsViewMode');
+    if (!specs) {
+        container.innerHTML = "Chưa có thông số kỹ thuật.";
+        return;
+    }
+
+    // Đổ dữ liệu vào View
+    const make = (l, v) => v ? `<div class="tech-spec-item"><span class="tech-spec-label">${l}:</span> ${v}</div>` : '';
+    container.innerHTML = `
+        ${make('Màn hình', specs.manHinh)} ${make('Chip', specs.chipset)}
+        ${make('RAM', specs.ram)} ${make('Bộ nhớ', specs.boNhoTrong)}
+        ${make('Pin', specs.pin)} ${make('Cổng sạc', specs.congSac)}
+    `;
+
+    // Đổ dữ liệu vào Form Edit (để sẵn khi cần sửa)
+    document.getElementById('spec_ThongSoId').value = specs.thongSoId;
+    document.getElementById('spec_ManHinh').value = specs.manHinh || '';
+    document.getElementById('spec_Chipset').value = specs.chipset || '';
+    document.getElementById('spec_Ram').value = specs.ram || '';
+    document.getElementById('spec_BoNho').value = specs.boNhoTrong || '';
+    document.getElementById('spec_Pin').value = specs.pin || '';
+    document.getElementById('spec_CongSac').value = specs.congSac || '';
+}
+
+function toggleEditSpecs() {
+    const view = document.getElementById('specsViewMode');
+    const edit = document.getElementById('specsEditMode');
+    const isEdit = edit.style.display === 'none';
+    edit.style.display = isEdit ? 'flex' : 'none';
+    view.style.display = isEdit ? 'none' : 'grid';
+}
+
+async function saveSpecs() {
+    const payload = {
+        thongSoId: parseInt(document.getElementById('spec_ThongSoId').value),
+        sanPhamId: parseInt(currentProductId),
+        manHinh: document.getElementById('spec_ManHinh').value,
+        chipset: document.getElementById('spec_Chipset').value,
+        ram: document.getElementById('spec_Ram').value,
+        boNhoTrong: document.getElementById('spec_BoNho').value,
+        pin: document.getElementById('spec_Pin').value,
+        congSac: document.getElementById('spec_CongSac').value
+    };
+
+    // Giả sử bạn có api/product/specs/{id}
+    const res = await fetch(`/api/product/specs/${currentProductId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+        alert("Cập nhật thông số thành công!");
+        location.reload();
+    }
+}
+
+// ======================== PHẦN BIẾN THỂ ========================
+
+
+function renderVariantPage() {
+    const tbody = document.getElementById('variantData');
+    if (!allVariants || allVariants.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có biến thể nào.</td></tr>';
+        document.getElementById('variantPagination').innerHTML = '';
+        return;
+    }
+
+    const startIndex = (currentVariantPage - 1) * variantsPerPage;
+    const endIndex = startIndex + variantsPerPage;
+    const variantsToRender = allVariants.slice(startIndex, endIndex);
+
+    tbody.innerHTML = variantsToRender.map(v => `
+        <tr>
+            <td>
+                <div class="image-slider" id="slider-${v.bienTheId}">
+                    <img class="main-img" src="${v.hinhAnhs[0] || 'https://via.placeholder.com/100'}">
+                    <div class="thumb-list">
+                        ${(v.hinhAnhs || []).map((img, i) => `
+                            <img src="${img}" class="thumb ${i === 0 ? 'active' : ''}" 
+                                 onclick="changeImage(${v.bienTheId}, '${img}', this)">
+                        `).join('')}
+                    </div>
+                </div>
+            </td>
+            <td>
+                <b>Màu:</b> ${v.mau || '-'}<br>
+                <b>Dung lượng:</b> ${v.dungLuong || '-'}
+            </td>
+            <td>
+                <b style="color:red">${v.gia.toLocaleString()}đ</b><br>
+                Kho: ${v.soLuongTon}
+            </td>
+            <td>${v.sku || '-'}</td>
+            <td>
+                <button class="btn-update" onclick="openEditVariantModal(${v.bienTheId})">Sửa</button>
+                <button onclick="deleteVariant(${v.bienTheId})" style="background:#dc3545; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">Xóa</button>
+            </td>
+        </tr>
+    `).join('');
+    
+    variantsToRender.forEach(v => {
+        if (typeof autoSlide === 'function') autoSlide(v.bienTheId, v.hinhAnhs);
+    });
+
+    renderVariantPagination();
+}
+
+function renderVariantPagination() {
+    const totalPages = Math.ceil(allVariants.length / variantsPerPage);
+    const paginationContainer = document.getElementById('variantPagination');
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+
+    let paginationHtml = `<ul class="pagination" style="display:flex; list-style:none; padding:0; justify-content:center; gap:5px; margin-top:15px;">`;
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHtml += `
+            <li>
+                <button onclick="changeVariantPage(${i})" style="padding:5px 10px; border:1px solid #ccc; background:${i === currentVariantPage ? '#e5002d' : '#fff'}; color:${i === currentVariantPage ? '#fff' : '#333'}; border-radius:4px; cursor:pointer;">
+                    ${i}
+                </button>
+            </li>
+        `;
+    }
+    paginationHtml += `</ul>`;
+    paginationContainer.innerHTML = paginationHtml;
+}
+
+function changeVariantPage(page) {
+    currentVariantPage = page;
+    renderVariantPage();
+}
+
+// ======================== MODAL THÊM/SỬA BIẾN THỂ (CÓ NHIỀU ẢNH) ========================
+
+function renderPreviews() {
+    const container = document.getElementById('newImagePreviewContainer');
+    container.innerHTML = selectedFiles.length > 0 ? '<small style="width: 100%; color: #007bff; font-weight: bold;">Ảnh chuẩn bị thêm mới:</small>' : '';
+    selectedFiles.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        container.innerHTML += `
+            <div style="position: relative; width: 80px; height: 80px;">
+                <img src="${url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 2px dashed #007bff;">
+                <button type="button" onclick="removeFile(${index})" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; line-height: 12px;">X</button>
+            </div>`;
+    });
+}
+
+window.removeFile = function(index) {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
+};
+
+function openCreateVariantModal() {
+    document.getElementById('variantForm').reset();
+    document.getElementById('var_BienTheId').value = "0";
+    document.getElementById('variantModalLabel').innerText = "Thêm biến thể mới";
+    
+    selectedFiles = [];
+    renderPreviews();
+    document.getElementById('currentImageContainer').innerHTML = '';
+
+    var myModal = new bootstrap.Modal(document.getElementById('variantModal'));
+    myModal.show();
+}
+
+async function openEditVariantModal(id) {
+    const variant = allVariants.find(v => v.bienTheId === id);
+    if (!variant) return;
+
+    document.getElementById('var_BienTheId').value = variant.bienTheId;
+    document.getElementById('var_Mau').value = variant.mau || '';
+    document.getElementById('var_DungLuong').value = variant.dungLuong || '';
+    document.getElementById('var_Ram').value = variant.ram || '';
+    document.getElementById('var_Sku').value = variant.sku || '';
+    document.getElementById('var_Gia').value = variant.gia || 0;
+    document.getElementById('var_GiaCu').value = variant.giaCu || '';
+    document.getElementById('var_SoLuongTon').value = variant.soLuongTon || 0;
+    document.getElementById('variantModalLabel').innerText = "Sửa biến thể";
+
+    selectedFiles = [];
+    renderPreviews();
+
+    const imgContainer = document.getElementById('currentImageContainer');
+    imgContainer.innerHTML = '<small style="width: 100%; color: #666; font-style: italic;">Đang tải ảnh hiện tại...</small>';
+    
+    var myModal = new bootstrap.Modal(document.getElementById('variantModal'));
+    myModal.show();
+
+    // Gọi API lấy dữ liệu variant (để lấy danh sách ID hình ảnh nhằm hỗ trợ xoá)
+    try {
+        const response = await fetch(`/api/variant/${id}`);
+        if(response.ok) {
+            const data = await response.json();
+            if (data.hinhAnhs && data.hinhAnhs.length > 0) {
+                let imgsHtml = '<small style="width: 100%; color: #666; font-style: italic; margin-bottom: 5px; display: block;">Ảnh hiện tại (Nhấn X để xóa):</small>';
+                data.hinhAnhs.forEach(img => {
+                    imgsHtml += `
+                        <div id="old-img-${img.id}" style="position: relative; display: inline-block;">
+                            <img src="${img.url}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; margin-top: 5px;">
+                            <button type="button" onclick="deleteOldImage(${img.id})" style="position: absolute; top: 0px; right: -5px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; line-height: 12px;" title="Xóa ảnh này">X</button>
+                        </div>`;
+                });
+                imgContainer.innerHTML = imgsHtml;
+            } else {
+                imgContainer.innerHTML = '';
+            }
+        }
+    } catch (e) {
+        imgContainer.innerHTML = '<small style="color:red">Lỗi tải ảnh.</small>';
+    }
+}
+
+async function deleteOldImage(imageId) {
+    if (!confirm("Bạn có chắc muốn xóa ảnh này không? Hành động này không thể hoàn tác.")) return;
+    try {
+        const response = await fetch(`/api/picture/${imageId}`, { method: 'DELETE' });
+        if (response.ok) {
+            document.getElementById(`old-img-${imageId}`).remove();
+            await loadProductDetail(currentProductId); // Cập nhật lại ảnh ở bảng danh sách
+        } else {
+            alert("Xóa ảnh thất bại. Vui lòng thử lại.");
+        }
+    } catch (error) {
+        console.error("Lỗi xóa ảnh:", error);
+    }
+}
+
+async function saveVariant() {
+    const form = document.getElementById('variantForm');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    const formData = new FormData();
+    const bienTheId = document.getElementById('var_BienTheId').value;
+    
+    formData.append('SanPhamId', currentProductId);
+    if (bienTheId !== "0") formData.append('id', bienTheId); // id dùng cho Update
+
+    formData.append('Mau', document.getElementById('var_Mau').value.trim());
+    formData.append('DungLuong', document.getElementById('var_DungLuong').value.trim());
+    formData.append('Ram', document.getElementById('var_Ram').value.trim());
+    formData.append('Sku', document.getElementById('var_Sku').value.trim());
+    formData.append('Gia', document.getElementById('var_Gia').value);
+    formData.append('GiaCu', document.getElementById('var_GiaCu').value || 0);
+    formData.append('SoLuongTon', document.getElementById('var_SoLuongTon').value);
+
+    // Đẩy toàn bộ ảnh đã chọn vào FormData
+    if (selectedFiles.length > 0) {
+        for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('HinhAnhFiles', selectedFiles[i]);
+        }
+    }
+
+    let url = '/api/variant';
+    let method = 'POST';
+
+    if (bienTheId !== "0") {
+        url = `/api/variant/${bienTheId}`;
+        method = 'PUT';
+    }
+
+    try {
+        const res = await fetch(url, { method: method, body: formData });
+        if (res.ok) {
+            alert("Lưu biến thể thành công!");
+            var modalEl = document.getElementById('variantModal');
+            var modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+            await loadProductDetail(currentProductId);
+        } else {
+            let errorMessage = "Lưu thất bại!";
+            try {
+                const errorData = await res.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {}
+            alert(errorMessage);
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Lỗi kết nối.");
+    }
+}
+
+ async function deleteVariant(id) {
+    if (!confirm("Bạn có chắc chắn muốn xóa biến thể này?")) return;
+    
+    try {
+        const res = await fetch(`/api/variant/${id}`, { 
+            method: 'DELETE' 
+        });
+
+        if (res.ok) {
+            alert("Xóa biến thể thành công!");
+            await loadProductDetail(currentProductId); 
+        } else {
+            // CHỈ parse JSON nếu thực sự có lỗi từ server trả về
+            let errorMessage = "Lỗi hệ thống";
+            try {
+                const errorData = await res.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+                // Nếu server trả về lỗi nma ko phải JSON (ví dụ 500 kèm text)
+                errorMessage = "Lỗi server (Mã lỗi: " + res.status + ")";
+            }
+            alert("Xóa thất bại: " + errorMessage);
+        }
+    } catch (error) {
+        // Nếu biến thể ĐÃ bị xóa rồi mà vẫn vào đây, tức là lỗi do res.json() ở trên
+        console.error("Lỗi:", error);
+        // Để chắc chắn, bạn có thể reload lại dữ liệu ở đây
+        await loadProductDetail(currentProductId);
+    }
+}
+// Các hàm changeImage, autoSlide, deleteVariant giữ nguyên như cũ...
+// ... (Logic đã cung cấp ở các lượt chat trước)
+</script>
+}

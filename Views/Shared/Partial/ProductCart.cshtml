@@ -1,0 +1,58 @@
+@model List<DUANCUAHANGAPPLE.Models.SanPham>
+
+@foreach (var item in Model)
+{
+    var firstVariant = item.BienThes?.FirstOrDefault();
+    var firstImage = firstVariant?.HinhAnhs?.FirstOrDefault();
+
+    <a asp-controller="Product"
+       asp-action="Chitietsanpham"
+       asp-route-id="@item.SanPhamId">
+
+        <div class="product-card">
+
+            @* Badge giảm giá *@
+            @if (firstVariant != null && firstVariant.GiamGia > 0)
+            {
+                <div class="discount-badge">
+                    -@firstVariant.GiamGia%
+                </div>
+            }
+
+            <div class="product-image">
+                @if (firstImage != null)
+                {
+                    <img src="@firstImage.UrlHinhAnh" />
+                }
+            </div>
+
+            <div class="product-info">
+
+                <h3>@item.TenSanPham</h3>
+
+                @if (firstVariant != null)
+                {
+                    <div class="price-new">
+                        @firstVariant.Gia.ToString("N0")đ
+                    </div>
+
+                    @if (firstVariant.GiaCu != null)
+                    {
+                        <div class="price-old">
+                            @firstVariant.GiaCu.Value.ToString("N0")đ
+                        </div>
+                    }
+                }
+
+                <div class="rating">
+                    ⭐⭐⭐⭐⭐ <span>(128)</span>
+                </div>
+
+                <button class="btn-cart">Xem chi tiết</button>
+
+            </div>
+
+        </div>
+
+    </a>
+}

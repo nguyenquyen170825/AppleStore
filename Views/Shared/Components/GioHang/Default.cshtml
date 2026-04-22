@@ -1,0 +1,30 @@
+
+@model List<DUANCUAHANGAPPLE.Models.GioHang>
+
+@foreach(var items in Model){
+    <div class="cart-item">
+
+        <input type="checkbox" checked class="check-item"/>
+
+        <img src="@items.BienTheSanPham.HinhAnhs.FirstOrDefault()?.UrlHinhAnh" class="product-img" />
+
+        <div class="product-info">
+            <h3>@items.BienTheSanPham.SanPham.TenSanPham</h3>
+            <p>Gói bảo hành AppleCare+</p>
+
+            <div class="quantity">
+                <button>-</button>
+                <span>@items.SoLuong</span>
+                <button>+</button>
+            </div>
+        </div>
+
+        <div class="product-price">
+            @items.BienTheSanPham.Gia.ToString("N0") đ
+        </div>
+
+        <div class="delete">
+            🗑
+        </div>
+    </div>
+}

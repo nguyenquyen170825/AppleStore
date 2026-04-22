@@ -1,0 +1,455 @@
+@using Microsoft.AspNetCore.Http.Features
+@model List<DUANCUAHANGAPPLE.Models.GioHang>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home/User/thanhtoan.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+}
+
+<body>
+    <div class="progress-header">
+        <div class="progress-bar">
+                <div class="step">
+                    <span class="step-num">1</span> Giỏ hàng
+                </div>
+                <div class="step-line"></div>
+                <div class="step-line active"></div>
+                <div class="step active" >       
+                    <span class="step-num">2</span> Thôg tin thanh toán
+                </div>
+                <div class="step-line"></div>
+                <div class="step">
+                    <span class="step-num">3</span> Hoàn tất
+                </div>
+            </div>
+    </div>
+    <main class="main">
+        <div class="checkout-container">
+            <div class="checkout-grid">
+            
+            <div class="flex-col gap-8 w-full">
+                
+                <section>
+                    <div class="flex items-center gap-3 section-header">
+                        <i class="fa-solid fa-user section-icon"></i>
+                        <h2 class="section-title">Thông tin khách hàng</h2>
+                    </div>
+                    <div class="card flex-col gap-6">
+                        <div class="form-grid">
+                            <div class="checkout-input-group">
+                                <label class="input-label">Họ và tên</label>
+                                <input type="text" class="form-control" placeholder="Nguyễn Văn A" value="@(ViewBag.User?.FullName ?? "")"/>
+                            </div>
+                            <div class="checkout-input-group">
+                                <label class="input-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" placeholder="0901 234 567" value="@(ViewBag.User?.Phone ?? "")"/>
+                            </div>
+                        </div>
+                        <div class="checkout-input-group">
+                            <label class="input-label">Email nhận hóa đơn</label>
+                            <input type="email" class="form-control" placeholder="example@email.com" value="@(ViewBag.User?.Email ?? "")"/>
+                        </div>
+                        <div class="form-grid">
+                             <div class="checkout-input-group">
+                                 <label class="input-label">Tỉnh / Thành phố</label>
+                                 <div class="custom-select-wrapper" id="province-wrapper">
+                                     <div class="custom-select-box">Chọn Tỉnh / Thành phố</div>
+                                     <div class="custom-select-list"></div>
+                                     <select id="province" class="hidden-select"></select>
+                                 </div>
+                             </div>
+                             <div class="checkout-input-group">
+                                 <label class="input-label">Quận / Huyện</label>
+                                 <div class="custom-select-wrapper" id="district-wrapper">
+                                     <div class="custom-select-box">Chọn Quận / Huyện</div>
+                                     <div class="custom-select-list"></div>
+                                     <select id="district" class="hidden-select"></select>
+                                 </div>
+                             </div>
+                        </div>
+                        <div class="form-grid" style="margin-top: 1rem;">
+                            <div class="checkout-input-group">
+                                <label class="input-label">Phường / Xã</label>
+                                <div class="custom-select-wrapper" id="ward-wrapper">
+                                     <div class="custom-select-box">Chọn Phường / Xã</div>
+                                     <div class="custom-select-list"></div>
+                                     <select id="ward" class="hidden-select"></select>
+                                </div>
+                            </div>
+                            <div class="checkout-input-group">
+                                <label class="input-label">Địa chỉ chi tiết</label>
+                                <input type="text" id="detailAddress" class="form-control" placeholder="Số nhà, tên đường..." />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="margin-top: 2rem;">
+                    <div class="flex items-center gap-3 section-header">
+                        <i class="fa-solid fa-truck" style="color: rgb(9, 77, 198);"></i>
+                        <h2 class="section-title">Phương thức giao hàng</h2>
+                    </div>
+                    <div class="form-grid">
+                        <label class="radio-card-wrapper">
+                            <input type="radio" name="shipping" value="0" class="radio-input" checked onchange="changeShipping(0)"/>
+                            <div class="radio-card">
+                                <div class="icon-box">
+                                    <i class="fa-solid fa-box-archive" style="color: rgb(9, 77, 198);"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600;">Giao hàng tiêu chuẩn</p>
+                                    <p style="font-size: 0.875rem; color: var(--secondary);">Dự kiến: 3-5 ngày làm việc</p>
+                                    <p style="margin-top: 0.5rem; font-weight: 500; color: var(--primary);">Miễn phí</p>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="radio-card-wrapper">
+                            <input type="radio" name="shipping" value="50000" class="radio-input" onchange="changeShipping(50000)"/>
+                            <div class="radio-card">
+                                <div class="icon-box">
+                                    <i class="fa-solid fa-bolt-lightning" style="color: rgb(9, 77, 198);"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600;">Giao nhanh (24h)</p>
+                                    <p style="font-size: 0.875rem; color: var(--secondary);">Nội thành Hồ Chí Minh & Hà Nội</p>
+                                    <p style="margin-top: 0.5rem; font-weight: 500; color: var(--primary);">50.000đ</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                <section style="margin-top: 2rem;">
+                    <div class="flex items-center gap-3 section-header">
+                        <i class="fa-solid fa-wallet" style="color: rgb(9, 77, 198);"></i>
+                        <h2 class="section-title">Phương thức thanh toán</h2>
+                    </div>
+                    
+                    <div class="payment-active-card">
+                        <div class="flex items-center justify-between" style="margin-bottom: 2rem;">
+                            <div class="flex items-center gap-4">
+                                <div style="padding: 0.5rem; border-radius: 0.5rem;background-color:#e3ecf9 ; color: white;">
+                                    <i class="fa-solid fa-qrcode" style="color: rgb(9, 77, 198);"></i>
+                                </div>
+                                <span style="font-weight: 600; font-size: 1.125rem;">Chuyển khoản Ngân hàng qua QR</span>
+                            </div>
+                            <span class="tag-recommended">Khuyên dùng</span>
+                        </div>
+
+                        <div class="form-grid items-center">
+                            <div class="qr-box">
+                                <div class="qr-image-container">
+                                    <img src="~/image/tải xuống.png" alt="Mã QR thanh toán" />
+                                </div>
+                                <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--secondary);">Quét mã bằng ứng dụng Ngân hàng của bạn</p>
+                            </div>
+                            
+                            <div class="flex-col gap-4 w-full">
+                                <div class="flex items-center justify-between bank-info-box">
+                                    <div>
+                                        <p class="input-label" style="font-size: 0.625rem;">Ngân hàng</p>
+                                        <p style="font-weight: 600;">MBbank</p>
+                                    </div>
+                                    <img src="~/image/tải xuống.png" alt="Logo VCB" style="height: 24px; opacity: 0.8;" />
+                                </div>
+                                <div class="flex items-center justify-between bank-info-box">
+                                    <div>
+                                        <p class="input-label" style="font-size: 0.625rem;">Số tài khoản</p>
+                                        <p style="font-weight: 600;">1024 5588 999</p>
+                                    </div>
+                                    <button class="copy-btn">Sao chép <i class="fa-solid fa-copy" style="color: rgb(9, 77, 198);"></i></button>
+                                </div>
+                                <div class="flex items-center justify-between bank-info-box">
+                                    <div>
+                                        <p class="input-label" style="font-size: 0.625rem;">Chủ tài khoản</p>
+                                        <p style="font-weight: 600; text-transform: uppercase;">CONG TY TNHH APPLESTORE</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between bank-info-box">
+                                    <div>
+                                        <p class="input-label" style="font-size: 0.625rem;">Nội dung</p>
+                                        <p style="font-weight: 600;">TS889241</p>
+                                    </div>
+                                    <button class="copy-btn">Sao chép <i class="fa-solid fa-copy" style="color: rgb(9, 77, 198);"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="payment-option-simple">
+                            <div class="flex items-center gap-4">
+                                <i class="fa-solid fa-money-bills" style="color: rgb(9, 77, 198);"></i>
+                                <span style="font-weight: 500;">Thanh toán khi nhận hàng (COD)</span>
+                            </div>
+                        </div>
+                        <div class="payment-option-simple">
+                            <div class="flex items-center gap-4">
+                                <i class="fa-solid fa-credit-card" style="color: rgb(9, 77, 198);"></i>
+                                <span style="font-weight: 500;">Ví điện tử (MoMo/ZaloPay)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="sidebar w-full">
+                <div class="card">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem;">Tóm tắt đơn hàng</h3>
+                    @foreach(var items in Model){
+                        <div class="product-item ">
+                            <div class="product-img-box">
+                                <img src="@items.BienTheSanPham.HinhAnhs?.FirstOrDefault()?.UrlHinhAnh" />
+                            </div>
+                            <div class="flex-col justify-center">
+                                <h4 style="font-weight: 600; font-size: 0.875rem;">@items.BienTheSanPham.SanPham?.TenSanPham</h4>
+                                <p style="font-size: 0.75rem; color: var(--secondary);">@items.BienTheSanPham.Mau, @items.BienTheSanPham.DungLuong</p>
+                                <p style="font-size: 0.75rem; color: var(--secondary);">Số lượng mua:@items.SoLuong</p>
+                                <p style="font-size: 0.875rem; font-weight: 500; margin-top: 0.25rem;font-weight: bold ;">@((items.BienTheSanPham.Gia * items.SoLuong).ToString("N0"))đ</p>
+                            </div>
+                        </div>
+                    }
+                    
+
+                    <div class="voucher-section">
+                        <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+                            <label class="input-label" style="font-size: 0.625rem;">Mã giảm giá / Quà tặng</label>
+                            <button class="copy-btn" style="font-size: 0.6875rem;">
+                                Chọn mã giảm giá <i class="fa-solid fa-angle-down" style="color: rgb(9, 77, 198);"></i>
+                            </button>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" class="form-control" style="flex: 1;" placeholder="Nhập mã ưu đãi" />
+                            <button class="btn-apply">Áp dụng</button>
+                        </div>
+                        
+                        <div class="voucher-list">
+                            @{
+                                var vouchers = ViewBag.Vouchers as List<DUANCUAHANGAPPLE.Models.PhieuGiamGiaNguoiDung>;
+                                var currentSum = (decimal)ViewBag.Sum;
+                                if (vouchers != null && vouchers.Any())
+                                {
+                                    foreach (var v in vouchers)
+                                    {
+                                        var pgg = v.PhieuGiamGia;
+                                        bool isEligible = true;
+                                        if (pgg.DonHangToiThieu.HasValue && currentSum < pgg.DonHangToiThieu.Value)
+                                        {
+                                            isEligible = false;
+                                        }
+
+                                        string discountText = pgg.LoaiGiam == "PhanTram" ? $"Giảm {pgg.GiaTriGiam:N0}%" : $"Giảm {pgg.GiaTriGiam:N0}đ";
+                                        string dkText = pgg.DonHangToiThieu.HasValue ? $"Đơn hàng từ {pgg.DonHangToiThieu.Value / 1000000:N0}tr" : "Không giới hạn";
+                                        string styleStr = isEligible ? "" : "opacity: 0.6; pointer-events: none;";
+
+                                        <div class="voucher-item" style="@styleStr">
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <p style="font-size: 0.875rem; font-weight: 700;">@discountText</p>
+                                                    <span class="voucher-tag">@pgg.Ma</span>
+                                                </div>
+                                                <p style="font-size: 0.625rem; color: var(--secondary); margin-top: 0.125rem;">
+                                                    @dkText - HSD: @pgg.NgayKetThuc.ToString("dd/MM/yyyy")
+                                                    @if (!isEligible)
+                                                    {
+                                                        <br /><span style="color: red; font-weight: bold;">Không đủ điều kiện</span>
+                                                    }
+                                                </p>
+                                            </div>
+                                            <button type="button" class="btn-voucher-apply" onclick="applyVoucher(@v.Id, '@pgg.Ma', '@pgg.LoaiGiam', @pgg.GiaTriGiam, @(pgg.GiamToiDa ?? 0))">Áp dụng</button>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p style="font-size: 0.875rem; color: var(--secondary); padding: 1rem 0;">Không có mã giảm giá nào.</p>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 0;">
+                        <div class="price-row">
+                            <span>Tạm tính</span>
+                            <span>@ViewBag.Sum.ToString("N0")</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Phí vận chuyển</span>
+                            <span id="txt-shipping" style="color: var(--primary); font-weight: 500;">Miễn phí</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Giảm giá</span>
+                            <span id="txt-discount">-0đ</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-baseline justify-between" style="padding-top: 1.5rem; border-top: 1px solid var(--surface-container-high); margin-bottom: 2rem;">
+                        <span style="font-weight: 600; font-size: 1.125rem;">Tổng cộng</span>
+                        <div style="text-align: right;">
+                            <p id="txt-total" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">@ViewBag.Sum.ToString("N0")đ</p>
+                            <p style="font-size: 0.625rem; color: var(--secondary);">(Đã bao gồm VAT)</p>
+                        </div>
+                    </div>
+
+                    <button class="btn-checkout">Đặt hàng ngay</button>
+                    <p style="text-align: center; font-size: 0.6875rem; color: var(--secondary); margin-top: 1rem;">
+                        Bằng cách nhấn Đặt hàng, bạn đồng ý với <a href="#" style="color: var(--primary); text-decoration: underline;">Điều khoản dịch vụ</a> của chúng tôi.
+                    </p>
+                </div>
+                
+                <div class="flex-col items-center gap-4" style="padding-top: 1.5rem;">
+                    <div class="flex items-center gap-2" style="font-size: 0.75rem; color: #64748b;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Thanh toán bảo mật SSL 256-bit
+                    </div>
+                </div>
+            </aside>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+
+@section Scripts {
+    <script>
+        const host = "https://provinces.open-api.vn/api/";
+        
+        // Hàm lấy dữ liệu Tỉnh/Thành
+        const fetchProvinces = () => {
+            fetch(host + "p/")
+                .then(res => res.json())
+                .then(data => renderCustomSelect(data, "province"));
+        }
+        
+        fetchProvinces();
+
+        const fetchDistricts = (provinceCode) => {
+            fetch(host + "p/" + provinceCode + "?depth=2")
+                .then(res => res.json())
+                .then(data => renderCustomSelect(data.districts, "district"));
+        }
+
+        const fetchWards = (districtCode) => {
+            fetch(host + "d/" + districtCode + "?depth=2")
+                .then(res => res.json())
+                .then(data => renderCustomSelect(data.wards, "ward"));
+        }
+
+        // Hàm render giao diện tùy chỉnh
+        const renderCustomSelect = (data, type) => {
+            const wrapper = document.querySelector(`#${type}-wrapper`);
+            const list = wrapper.querySelector('.custom-select-list');
+            const select = document.getElementById(type);
+            
+            // Xóa dữ liệu cũ
+            list.innerHTML = "";
+            select.innerHTML = '<option value="">Chọn</option>';
+
+            data.forEach(item => {
+                // Thêm vào list tùy chỉnh
+                const div = document.createElement('div');
+                div.className = 'custom-select-item';
+                div.innerText = item.name;
+                div.dataset.value = item.code;
+                
+                div.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectItem(wrapper, item.name, item.code, type);
+                });
+                
+                list.appendChild(div);
+
+                // Thêm vào select ẩn để giữ logic cũ
+                const option = document.createElement('option');
+                option.value = item.code;
+                option.innerText = item.name;
+                select.appendChild(option);
+            });
+        }
+
+        const selectItem = (wrapper, name, value, type) => {
+            wrapper.querySelector('.custom-select-box').innerText = name;
+            const select = wrapper.querySelector('select');
+            select.value = value;
+            wrapper.classList.remove('active');
+
+            // Kích hoạt logic nạp cấp tiếp theo
+            if (type === 'province') {
+                document.querySelector('#district-wrapper .custom-select-box').innerText = "Chọn Quận / Huyện";
+                document.querySelector('#ward-wrapper .custom-select-box').innerText = "Chọn Phường / Xã";
+                fetchDistricts(value);
+            } else if (type === 'district') {
+                document.querySelector('#ward-wrapper .custom-select-box').innerText = "Chọn Phường / Xã";
+                fetchWards(value);
+            }
+        }
+
+        // Xử lý đóng mở dropdown
+        document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+            wrapper.addEventListener('click', () => {
+                // Đóng các cái khác đang mở
+                document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('active');
+                });
+                wrapper.classList.toggle('active');
+            });
+        });
+
+        // Đóng dropdown khi nhấn ra ngoài
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select-wrapper')) {
+                document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('active'));
+            }
+        });
+
+        // Xử lý giá tiền
+        let currentSum = parseFloat('@ViewBag.Sum');
+        let currentShipping = 0;
+        
+        let appliedVoucher = null;
+
+        function changeShipping(fee) {
+            currentShipping = parseFloat(fee);
+            updateTotal();
+        }
+
+        function applyVoucher(id, code, type, value, maxVal) {
+            appliedVoucher = {
+                id: id,
+                code: code,
+                type: type, // 'PhanTram' hoac 'Tien'
+                value: parseFloat(value),
+                maxVal: parseFloat(maxVal)
+            };
+            // Gán giá trị mã vào input
+            let inp = document.querySelector('.voucher-section input.form-control');
+            if (inp) inp.value = code;
+            
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let discountObj = 0;
+            if (appliedVoucher) {
+                if (appliedVoucher.type === 'PhanTram') {
+                    discountObj = currentSum * (appliedVoucher.value / 100);
+                    if (appliedVoucher.maxVal > 0 && discountObj > appliedVoucher.maxVal) {
+                        discountObj = appliedVoucher.maxVal;
+                    }
+                } else {
+                    discountObj = appliedVoucher.value;
+                }
+            }
+
+            let total = currentSum + currentShipping - discountObj;
+            if (total < 0) total = 0;
+
+            // Update UI
+            document.getElementById('txt-shipping').innerText = currentShipping === 0 ? "Miễn phí" : currentShipping.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('txt-discount').innerText = '-' + discountObj.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('txt-discount').style.color = 'var(--primary)';
+            document.getElementById('txt-total').innerText = total.toLocaleString('vi-VN') + 'đ';
+        }
+    </script>
+}
+

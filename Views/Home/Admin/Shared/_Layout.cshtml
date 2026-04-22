@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Qu?n tr?</title>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/web1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        /* X? lý giao di?n cho ph?n User khi thu g?n Sidebar */
+        #sidebar.collapsed .border-top {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            text-align: center;
+        }
+        #sidebar.collapsed #dropdownUser {
+            justify-content: center !important;
+        }
+        #sidebar.collapsed #dropdownUser span {
+            display: none !important; /* ?n ch? Xin chào Admin */
+        }
+        #sidebar.collapsed #dropdownUser .fa-chevron-down {
+            display: none !important; /* ?n mui tên tr? xu?ng khi thu g?n */
+        }
+        #sidebar.collapsed #dropdownUser i {
+            margin-right: 0 !important; /* B? kho?ng cách l? ph?i d? icon d?ng gi?a */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="d-flex flex-nowrap">
+            
+            <nav id="sidebar" class="sidebar d-flex flex-column flex-shrink-0">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="sidebar-brand text-center">
+                    <i class="fa-solid fa-mobile-alt"></i> Mobile Store
+                </a>
+                <ul class="nav flex-column mb-auto mt-2 px-2">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            <i class="fa-solid fa-house me-2"></i> Trang ch?
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="DanhMuc" asp-action="Index">
+                            <i class="fa-solid fa-tags me-2"></i> Hãng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">
+                            <i class="fa-solid fa-boxes-stacked me-2"></i> S?n ph?m
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">
+                            <i class="fa-solid fa-cart-shopping me-2"></i> Ðon hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="News" asp-action="Index">
+                            <i class="fa-solid fa-newspaper me-2"></i> Bài vi?t
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">
+                            <i class="fa-solid fa-user me-2"></i>Ngu?i dùng
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="p-3 border-top mt-auto">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-dark text-decoration-none w-100" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-circle-user fs-4 me-2 text-secondary"></i>
+                            <span class="fw-bold" style="font-size: 14px; color: #bfbbbb;">Xin chào, Admin</span>
+                            <i class="fa-solid fa-chevron-down ms-auto" style="font-size: 12px; color: #bfbbbb;"></i>
+                        </a>
+                        <ul class="dropdown-menu shadow" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item py-2" href="#"><i class="fa-solid fa-key me-2 text-secondary"></i> Ð?i m?t kh?u</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger fw-bold" href="#"><i class="fa-solid fa-right-from-bracket me-2"></i> Ðang xu?t</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="main-wrapper bg-light">
+                
+                <header>
+                  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm px-4" style="height: 60px;">
+                        
+                        <div id="toggleSidebar" class="btn btn-outline-secondary me-3" title="?n/Hi?n Menu">
+                            <i class="fa-solid fa-bars"></i>
+                        </div>
+                    
+                    </nav>
+                </header>
+
+                <main role="main" class="flex-grow-1 p-4">
+                    @RenderBody()
+                </main>
+
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Ch?c nang thu g?n/m? r?ng Sidebar (Ðã có)
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.getElementById("sidebar");
+        const mainWrapper = document.querySelector(".main-wrapper");
+
+        toggleBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+             mainWrapper.classList.toggle("expanded"); 
+        });
+
+        // 2. Ch?c nang t? d?ng PHÁT SÁNG menu dang xem (M?i thêm)
+        const currentPath = window.location.pathname.toLowerCase(); // L?y du?ng d?n URL hi?n t?i
+        const navLinks = document.querySelectorAll("#sidebar .nav-link"); // L?y t?t c? các th? a trong menu
+
+        navLinks.forEach(link => {
+            // L?y thu?c tính href c?a t?ng th? a
+            const linkPath = link.getAttribute("href").toLowerCase();
+
+            // N?u URL hi?n t?i ch?a du?ng d?n c?a th? a (ho?c kh?p hoàn toàn)
+            if (currentPath === linkPath || (linkPath !== "/" && currentPath.startsWith(linkPath))) {
+                link.classList.add("active"); // Thêm class phát sáng
+            } else if (currentPath === "/" && linkPath === "/") {
+                // X? lý riêng cho trang ch? (Home)
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

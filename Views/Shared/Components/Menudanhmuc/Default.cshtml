@@ -1,0 +1,12 @@
+@model List<DUANCUAHANGAPPLE.Models.DanhMuc>
+
+<div class="mega-menu">
+    @foreach(var item in Model)
+    {
+        <div class="menu-item">
+            <a asp-controller="Product" asp-action="Category" asp-route-id="@item.MaDanhMuc">
+                @item.TenDanhMuc
+            </a>
+        </div>
+    }
+</div>

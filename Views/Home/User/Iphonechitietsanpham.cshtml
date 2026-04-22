@@ -1,0 +1,574 @@
+@model DUANCUAHANGAPPLE.Models.SanPham
+
+@{
+    var firstVariant = Model.BienThes?.FirstOrDefault();
+    var firstImage = firstVariant?.HinhAnhs?.FirstOrDefault();
+    var allImages = firstVariant?.HinhAnhs ?? new List<DUANCUAHANGAPPLE.Models.HinhAnh>();
+}
+
+@section Styles{
+<link rel="stylesheet" href="~/css/home/User/Iphonechitietsanpham.css" asp-append-version="true" />
+}
+
+    <!-- Breadcrumb refined -->
+    <nav class="detail-breadcrumb">
+        <a asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <span class="divider">/</span>
+        <a href="#">Điện thoại</a>
+        <span class="divider">/</span>
+        <a href="#">Apple</a>
+        <span class="divider">/</span>
+        <span class="current">@Model.TenSanPham</span>
+    </nav>
+
+<div class="product-detail-wrapper">
+    <!-- Top Title & Quick Actions -->
+    <div class="info-header-premium">
+        <h1 class="product-title">@Model.TenSanPham</h1>
+        <div class="product-rating-row">
+            <div class="stars">
+                <i class="fa-solid fa-star"></i> 5 <span class="rating-count">(2 đánh giá)</span>
+            </div>
+            <div class="product-quick-actions">
+                <button class="qa-item"><i class="fa-regular fa-message"></i> Hỏi đáp</button>
+                <div class="qa-divider"></div>
+                <button class="qa-item"><i class="fa-solid fa-microchip"></i> Thông số</button>
+                <div class="qa-divider"></div>
+                <button class="qa-item"><i class="fa-solid fa-circle-plus"></i> So sánh</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-detail-grid">
+
+        <!-- ====== LEFT: GALLERY ====== -->
+        <div class="gallery-section">
+            <div class="featured-banner-mini" id="galleryMain">
+                 <div class="featured-inner">
+                    <div class="featured-img-box">
+                         @if (firstImage != null) { <img id="mainProductImg" src="@firstImage.UrlHinhAnh" alt="@Model.TenSanPham" /> }
+                    </div>
+                    <div class="featured-text">
+                        <h3>TÍNH NĂNG NỔI BẬT</h3>
+                        <ul>
+                            <li>Thiết kế nguyên khối nhôm rèn nhiệt</li>
+                            <li>Ceramic Shield bền bỉ hơn 4 lần</li>
+                            <li>Hệ thống camera pro fusion 48MP</li>
+                        </ul>
+                    </div>
+                 </div>
+            </div>
+
+            <div class="gallery-thumbs-row">
+                <button class="thumb-nav"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="thumbs-scroll">
+                    <button class="thumb-item active"><i class="fa-solid fa-video"></i><span>Video</span></button>
+                    <button class="thumb-item"><i class="fa-solid fa-star"></i><span>Tính năng</span></button>
+                    @foreach (var img in allImages)
+                    {
+                        <button class="thumb-item" onclick="changeImage(this)" data-img="@img.UrlHinhAnh">
+                            <img src="@img.UrlHinhAnh" />
+                        </button>
+                    }
+                </div>
+                <button class="thumb-nav"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <!-- Cam kết sản phẩm -->
+            <div class="product-commitments">
+                <h3 class="commit-title">Cam kết sản phẩm</h3>
+                <div class="commitments-grid">
+                    <div class="commitment-card">
+                        <div class="c-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <div class="c-text">Mới, đầy đủ phụ kiện từ nhà sản xuất</div>
+                    </div>
+                    <div class="commitment-card">
+                        <div class="c-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="c-text">1 ĐỔI 1 trong 30 ngày nếu có lỗi phần cứng nhà sản xuất. Bảo hành 12 tháng tại trung tâm bảo hành chính hãng Apple: CareS.vn <a href="#">Xem chi tiết</a><br/>Xem thông tin kích hoạt bảo hành các sản phẩm Apple <a href="#">Chi tiết tại đây</a></div>
+                    </div>
+                    <div class="commitment-card">
+                        <div class="c-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <div class="c-text">Máy, Sách hướng dẫn, Cây lấy sim, Cáp Type C</div>
+                    </div>
+                    <div class="commitment-card">
+                        <div class="c-icon"><i class="fa-solid fa-tags"></i></div>
+                        <div class="c-text">Giá sản phẩm <strong>đã bao gồm thuế VAT</strong>, có hỗ trợ <a href="#">hoàn thuế VAT - Tax Refund</a> cho khách du lịch.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông số kỹ thuật -->
+            <!-- Thông số kỹ thuật -->
+            <div class="product-specs">
+                <div class="specs-header">
+                    <h3>Thông số kỹ thuật</h3>
+                    <a href="javascript:void(0)" onclick="openSpecsModal()" class="view-all">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <table class="specs-table">
+                    <tbody>
+                        @if(Model.ThongSoKyThuats != null && Model.ThongSoKyThuats.Any())
+                        {
+                            foreach(var ts in Model.ThongSoKyThuats.Take(8))
+                            {
+                                <tr>
+                                    <td class="s-label">@ts.TenThongSo</td>
+                                    <td class="s-value">@Html.Raw(ts.GiaTri)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2" style="text-align: center; color: #86868b">Đang cập nhật thông số...</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button class="btn-compare" onclick="openSpecsModal()">So sánh các phiên bản iPhone <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- ====== RIGHT: PRODUCT INFO ====== -->
+        <div class="info-section">
+
+            <!-- Premium Price Box -->
+            <div class="price-container-premium">
+                <div class="price-main-box">
+                    <span class="price-val">@firstVariant?.Gia.ToString("N0")đ</span>
+                    <span class="price-old">@firstVariant?.GiaCu?.ToString("N0")đ</span>
+                </div>
+                <div class="price-separator">Hoặc</div>
+                <div class="price-tradein-box">
+                    <div class="trade-title">Thu cũ lên đời chỉ từ</div>
+                    <div class="trade-val">@((firstVariant?.Gia - 2000000)?.ToString("N0"))đ</div>
+                    <div class="trade-note">Trợ giá đến <span class="hi">2 triệu</span> <a href="#">Định giá ngay</a></div>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <!-- Phiên bản (Dung lượng) -->
+            <div class="variant-section">
+                <h4 class="v-label">Phiên bản</h4>
+                <div class="storage-grid">
+                    @foreach (var dl in Model.BienThes.Select(x => x.DungLuong).Distinct())
+                    {
+                        <button class="storage-btn @(dl == firstVariant?.DungLuong ? "active" : "")" 
+                                onclick="selectStorage('@dl')">
+                            @dl
+                            <i class="fa-solid fa-circle-check check-icon"></i>
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Màu sắc (Màu duy nhất) -->
+            <div class="variant-section">
+                <h4 class="v-label">Màu sắc</h4>
+                <div class="color-grid-premium">
+                    @foreach (var mau in Model.BienThes.Select(x => x.Mau).Distinct())
+                    {
+                        var btColor = Model.BienThes.OrderBy(x => x.Gia).FirstOrDefault(x => x.Mau == mau);
+                        <button class="color-variant-btn @(mau == firstVariant?.Mau ? "active" : "")"
+                                onclick="selectColor('@mau')"
+                                data-color="@mau">
+                            <img src="@(btColor?.HinhAnhs?.FirstOrDefault()?.AnhIcon ?? btColor?.HinhAnhs?.FirstOrDefault()?.UrlHinhAnh)" />
+                            <div class="cv-info">
+                                <span class="cv-name">@mau</span>
+                                <span class="cv-price" data-color-label="@mau">@btColor?.Gia.ToString("N0")đ</span>
+                            </div>
+                            <i class="fa-solid fa-circle-check check-icon"></i>
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Khuyến mãi -->
+            <div class="promotion-box">
+                <div class="promo-header">
+                    <i class="fa-solid fa-gift"></i> Khuyến mãi đi kèm
+                    <a href="#" class="view-all">Xem tất cả voucher <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <div class="promo-list">
+                    <div class="promo-item">
+                        <div class="promo-tag">Giảm 500k</div>
+                        <div class="promo-desc">
+                            <b>Voucher 500k</b>
+                            <span>Áp dụng cho iPhone 17 Series</span>
+                        </div>
+                        <button class="btn-collect">Thu thập</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin vận chuyển -->
+            <div class="delivery-info">
+                <div class="d-icon"><i class="fa-solid fa-truck-fast"></i> Thông tin vận chuyển</div>
+                <div class="d-location">
+                    <i class="fa-solid fa-location-dot"></i> Chọn địa chỉ giao hàng để nhận ưu đãi <span class="d-badge">Mới</span>
+                </div>
+            </div>
+
+            <!-- Flow Action Buttons -->
+            <div class="flow-action-buttons">
+                <button class="btn-flow-installment">Trả góp 0%</button>
+                <button class="btn-flow-buy" onclick="addToCart()">
+                    <strong>MUA NGAY</strong>
+                    <span>Giao nhanh từ 2 giờ nhận tại cửa hàng</span>
+                </button>
+                <button class="btn-flow-add" onclick="addToCart()">
+                    <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                </button>
+            </div>
+
+            <!-- Mua kèm giá sốc -->
+            <div class="accessory-bundle shock-price">
+                <div class="bundle-header">
+                    <div class="b-title"><i class="fa-solid fa-fire"></i> Mua kèm giá sốc</div>
+                    <a href="#" class="view-all">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+                <div class="bundle-grid">
+                    <div class="bundle-item">
+                        <img src="https://via.placeholder.com/60" alt="" />
+                        <div class="b-info">
+                            <span class="b-name">Giảm đến 15% mua kèm tai nghe Sony</span>
+                            <span class="b-promo">Giảm thêm 15%</span>
+                            <button class="btn-choose">Chọn thêm <i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="bundle-item">
+                        <img src="https://via.placeholder.com/60" alt="" />
+                        <div class="b-info">
+                            <span class="b-name">Mua kèm sim giảm thêm 50K</span>
+                            <span class="b-promo">Giảm tối đa 50.000đ</span>
+                            <button class="btn-choose">Chọn thêm <i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phụ kiện mua cùng -->
+            <div class="accessory-bundle regular-bundle">
+                <div class="bundle-header">
+                    <div class="b-title">Phụ kiện mua cùng</div>
+                </div>
+                <div class="bundle-grid">
+                    <div class="bundle-item">
+                        <img src="https://via.placeholder.com/60" alt="" />
+                        <div class="b-info">
+                            <span class="b-name">Củ sạc Apple 2 cổng Type-C 35W</span>
+                            <span class="b-price">1.490.000đ</span>
+                            <button class="btn-add-regular" onclick="addToCart()">Thêm vào giỏ <i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="bundle-item">
+                            <img src="https://via.placeholder.com/60" alt="" />
+                        <div class="b-info">
+                            <span class="b-name">Sạc Mophie Essentials 1C</span>
+                            <span class="b-price">590.000đ</span>
+                            <button class="btn-add-regular" onclick="addToCart()">Thêm vào giỏ <i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dịch vụ bảo hành -->
+            <div class="warranty-service">
+                <div class="w-header">
+                    <i class="fa-solid fa-shield-cat"></i> Chọn gói dịch vụ bảo hành <i class="fa-solid fa-circle-info info-i"></i>
+                </div>
+                <div class="w-grid">
+                    <label class="w-item" onclick="toggleWarranty(event, this)" data-price="5499000">
+                        <input type="radio" name="warranty" />
+                        <span class="w-name">Dịch vụ bảo...</span>
+                        <span class="w-price">5.499.000đ</span>
+                    </label>
+                    <label class="w-item" onclick="toggleWarranty(event, this)" data-price="7800000">
+                        <input type="radio" name="warranty" />
+                        <span class="w-name">1 đổi 1 VIP 24...</span>
+                        <span class="w-price">7.800.000đ</span>
+                    </label>
+                    <label class="w-item" onclick="toggleWarranty(event, this)" data-price="9800000">
+                        <input type="radio" name="warranty" />
+                        <span class="w-name">Rơi vỡ rớt nước...</span>
+                        <span class="w-price">9.800.000đ</span>
+                    </label>
+                </div>
+            </div>
+
+        </div> <!-- end info-section -->
+
+    </div> <!-- end grid -->
+</div> <!-- end wrapper -->
+
+<!-- STICKY BOTTOM BAR -->
+<div class="sticky-action-bar">
+    <div class="s-container">
+        <div class="s-left">
+            <img src="@firstImage?.UrlHinhAnh" class="s-img" />
+            <div class="s-info">
+                <div class="s-name">@Model.TenSanPham - @firstVariant?.Mau</div>
+                <div class="s-price">
+                    <span class="curr">@firstVariant?.Gia.ToString("N0")đ</span>
+                    <span class="old">@firstVariant?.GiaCu?.ToString("N0")đ</span>
+                </div>
+            </div>
+        </div>
+        <div class="s-right">
+            <button class="btn-installment">Trả góp 0%</button>
+            <button class="btn-buy-now" onclick="addToCart()">Mua Ngay</button>
+            <button class="btn-add-cart" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i></button>
+            <button class="btn-contact"><i class="fa-solid fa-headset"></i> Liên hệ</button>
+        </div>
+    </div>
+</div>
+
+<!-- SPECS MODAL -->
+<div class="specs-modal-overlay" id="specsModal" onclick="closeSpecsModal(event)">
+    <div class="specs-modal-content">
+        <div class="specs-modal-header">
+            <h3>Thông số kỹ thuật chi tiết</h3>
+            <button class="close-modal-btn" onclick="closeSpecsModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="specs-modal-body">
+            @if(Model.ThongSoKyThuats != null && Model.ThongSoKyThuats.Any())
+            {
+                var groupedSpecs = Model.ThongSoKyThuats.GroupBy(x => x.LoaiThongSo?.TenLoai ?? "Thông số chung");
+                foreach(var group in groupedSpecs)
+                {
+                    <div class="specs-group">
+                        <h4 class="specs-group-title">@group.Key</h4>
+                        <table class="specs-full-table">
+                            <tbody>
+                                @foreach(var ts in group)
+                                {
+                                    <tr>
+                                        <td class="s-label-full">@ts.TenThongSo</td>
+                                        <td class="s-value-full">@Html.Raw(ts.GiaTri)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+            else
+            {
+                <div style="text-align:center; padding: 40px; color: #86868b">Sản phẩm chưa có thông số chi tiết</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // ====== Specs modal ======
+    function openSpecsModal() {
+        document.getElementById('specsModal').classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeSpecsModal(e = null) {
+        if (!e || e.target.id === 'specsModal' || e.target.closest('.close-modal-btn')) {
+            document.getElementById('specsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // ====== Variant selection logic ======
+    let selectedColor = "@firstVariant?.Mau";
+    let selectedStorage = "@firstVariant?.DungLuong";
+    let selectedVariantId = @(firstVariant?.BienTheId ?? 0);
+    
+    const variants = @Html.Raw(Json.Serialize(
+        Model.BienThes.Select(x => new {
+            id = x.BienTheId,
+            storage = x.DungLuong,
+            color = x.Mau,
+            price = x.Gia,
+            priceStr = x.Gia.ToString("N0") + "đ",
+            oldPriceStr = x.GiaCu?.ToString("N0") + "đ",
+            img = x.HinhAnhs?.FirstOrDefault()?.UrlHinhAnh
+        })
+    ));
+
+    function selectStorage(dl) {
+        dl = dl.trim();
+        if (selectedStorage === dl) {
+            // Nhấp lại để bỏ chọn hoàn toàn
+            selectedStorage = "";
+        } else {
+            selectedStorage = dl;
+            // Nếu có màu đang chọn mà ko hỗ trợ dung lượng này, đổi màu
+            if (selectedColor && !variants.some(v => v.storage == selectedStorage && v.color == selectedColor)) {
+                const firstValid = variants.find(v => v.storage == selectedStorage);
+                if (firstValid) selectedColor = firstValid.color;
+            }
+        }
+        updateVariant();
+    }
+
+    function selectColor(mau) {
+        mau = mau.trim();
+        if (selectedColor === mau) {
+            // Nhấp lại để bỏ chọn
+            selectedColor = "";
+        } else {
+            selectedColor = mau;
+            // Nếu có dung lượng đang chọn mà ko có màu này, đổi dung lượng
+            if (selectedStorage && !variants.some(v => v.color == selectedColor && v.storage == selectedStorage)) {
+                const firstValid = variants.find(v => v.color == selectedColor);
+                if (firstValid) selectedStorage = firstValid.storage;
+            }
+        }
+        updateVariant();
+    }
+
+    function updateVariant() {
+        // Cập nhật trạng thái active cho dung lượng
+        document.querySelectorAll('.storage-btn').forEach(btn => {
+            const dl = btn.innerText.trim();
+            btn.classList.toggle('active', dl === selectedStorage && selectedStorage !== "");
+            
+            // Nếu CÓ CHỌN màu, làm mờ các dung lượng ko có màu đó
+            if (selectedColor) {
+                const match = variants.some(v => v.color == selectedColor && v.storage == dl);
+                btn.style.opacity = match ? '1' : '0.4';
+                btn.style.pointerEvents = 'auto'; // Luôn cho phép bấm để chọn lại
+            } else {
+                // Nếu ko chọn màu nào, hiện rõ tất cả các dung lượng có hàng
+                const hasAnyColor = variants.some(v => v.storage == dl);
+                btn.style.opacity = hasAnyColor ? '1' : '0.4';
+                btn.style.pointerEvents = hasAnyColor ? 'auto' : 'none';
+            }
+        });
+
+        // Cập nhật trạng thái active và giá cho màu sắc
+        document.querySelectorAll('.color-variant-btn').forEach(btn => {
+            const color = btn.dataset.color;
+            btn.classList.toggle('active', color === selectedColor && selectedColor !== "");
+            
+            const priceEl = btn.querySelector('.cv-price');
+
+            if (selectedStorage) {
+                const match = variants.find(v => v.storage == selectedStorage && v.color == color);
+                if(match) {
+                    btn.style.opacity = '1';
+                    if(priceEl) priceEl.innerText = match.priceStr;
+                } else {
+                    btn.style.opacity = '0.4';
+                    if(priceEl) priceEl.innerText = "Hết hàng";
+                }
+            } else {
+                // Nếu ko chọn dung lượng nào, hiện rõ tất cả màu sắc và lấy giá nhỏ nhất của màu đó
+                btn.style.opacity = '1';
+                const colorVariants = variants.filter(v => v.color == color);
+                if (colorVariants.length > 0) {
+                    const minPrice = Math.min(...colorVariants.map(v => v.price));
+                    if(priceEl) priceEl.innerText = "Từ " + minPrice.toLocaleString('vi-VN') + 'đ';
+                }
+            }
+        });
+
+        // Tìm variant chính xác
+        const found = variants.find(v => v.storage == selectedStorage && v.color == selectedColor);
+        
+        let basePrice = found ? found.price : 0;
+        let warrantyPrice = 0;
+        const activeWarranty = document.querySelector('.w-item.active');
+        if (activeWarranty) {
+            warrantyPrice = parseInt(activeWarranty.dataset.price) || 0;
+        }
+        let total = basePrice + warrantyPrice;
+
+        if(found){
+            selectedVariantId = found.id;
+            
+            // Update main price
+            const pCurrent = document.querySelector('.price-val');
+            const pOld = document.querySelector('.price-old');
+            if(pCurrent) pCurrent.innerText = total.toLocaleString('vi-VN') + 'đ';
+            if(pOld) pOld.innerText = found.oldPriceStr || "";
+
+            // Update trade-in price (Theo giá máy gốc)
+            const tradeVal = document.querySelector('.trade-val');
+            if(tradeVal) tradeVal.innerText = (found.price - 2000000).toLocaleString('vi-VN') + 'đ';
+
+            // Update sticky bar
+            const sName = document.querySelector('.s-name');
+            const sPrice = document.querySelector('.s-price .curr');
+            const sOld = document.querySelector('.s-price .old');
+            const sImg = document.querySelector('.s-img');
+            
+            if(sName) sName.innerText = "@Model.TenSanPham - " + found.color;
+            if(sPrice) sPrice.innerText = total.toLocaleString('vi-VN') + 'đ';
+            if(sOld) sOld.innerText = found.oldPriceStr || "";
+            if(sImg && found.img) sImg.src = found.img;
+        } else {
+            selectedVariantId = 0;
+            // Nếu rỗng 1 trong 2 mục, hiện thông báo cho người dùng biết
+            const pCurrent = document.querySelector('.price-val');
+            const pOld = document.querySelector('.price-old');
+            if(pCurrent) pCurrent.innerText = (warrantyPrice > 0 ? "+ " + warrantyPrice.toLocaleString('vi-VN') + 'đ' : "Vui lòng chọn cấu hình");
+            if(pOld) pOld.innerText = "";
+            
+            const tradeVal = document.querySelector('.trade-val');
+            if(tradeVal) tradeVal.innerText = "---";
+        }
+    }
+
+    // ====== Add to cart ======
+    function addToCart() {
+        if (!selectedVariantId) {
+            showToast("Vui lòng chọn phiên bản!", true);
+            return;
+        }
+        fetch('/Cart/AddGioHang?bientheid=' + selectedVariantId, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                showToast("Đã thêm vào giỏ hàng thành công!");
+                if (typeof updateCartBadge === 'function') updateCartBadge();
+            } else {
+                showToast(data.message || "Thêm thất bại. Sản phẩm hết hàng.", true);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showToast("Có lỗi xảy ra!", true);
+        });
+    }
+
+    // ====== Image gallery ======
+    function changeImage(thumb) {
+        document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        document.getElementById('mainProductImg').src = thumb.dataset.img;
+    }
+
+    // ====== Warranty selection logic ======
+    function toggleWarranty(event, el) {
+        // Tránh bị nhảy sự kiện do label bao quanh input
+        if(event) event.preventDefault();
+
+        const isActive = el.classList.contains('active');
+        
+        // Bỏ chọn tất cả
+        document.querySelectorAll('.w-item').forEach(item => {
+            item.classList.remove('active');
+                const radio = item.querySelector('input[type="radio"]');
+                if (radio) radio.checked = false;
+            });
+
+            // Nếu chưa chọn thì chọn, nếu chọn rồi thì bỏ qua (đã xóa ở trên)
+            if (!isActive) {
+                el.classList.add('active');
+                const radio = el.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+            }
+
+            // Cập nhật lại tổng giá tiền
+            updateVariant();
+        }
+</script>
+}

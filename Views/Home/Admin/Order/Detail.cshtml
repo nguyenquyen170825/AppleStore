@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/orderdetail.css" asp-append-version="true" />
+}
+<div class="main">
+    <div class="header section-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Chi tiết đơn hàng: <span id="orderIdDisplay" style="color: #007bff;">#Đang tải...</span></h3>
+        <button class="btn btn-secondary" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+    </div>
+
+    <div class="order-info-card">
+        <div class="info-group">
+            <h4 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px;">Thông tin khách hàng</h4>
+            <p><span class="info-label">Khách hàng:</span> <span id="customerName">...</span></p>
+            <p><span class="info-label">Số điện thoại:</span> <span id="customerPhone">...</span></p>
+            <p><span class="info-label">Địa chỉ:</span> <span id="customerAddress">...</span></p>
+        </div>
+        <div class="info-group">
+            <h4 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px;">Thông tin đơn hàng</h4>
+            <p><span class="info-label">Ngày đặt:</span> <span id="orderDate">...</span></p>
+            <p><span class="info-label">Trạng thái:</span> <span id="orderStatus" class="badge-status">...</span></p>
+        </div>
+    </div>
+
+    <div class="header section-header">
+        <h3>Danh sách sản phẩm</h3>
+    </div>
+    
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Phân loại</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody id="orderItemsData">
+                <tr><td colspan="6" style="text-align:center;">Đang tải dữ liệu...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="total-section">
+        <span style="font-size: 18px; font-weight: 600; color: #333; margin-right: 15px;">Tổng cộng:</span>
+        <span class="total-amount" id="orderTotalAmount">0 VNĐ</span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            // Lấy ID đơn hàng từ URL. Ví dụ URL là: /Order/Detail/15 -> Lấy ra số 15
+            const urlParts = window.location.pathname.split('/');
+            const orderId = urlParts[urlParts.length - 1];
+
+            if (!orderId || isNaN(orderId)) {
+                alert("Mã đơn hàng không hợp lệ!");
+                return;
+            }
+
+            await loadOrderDetail(orderId);
+        });
+
+        async function loadOrderDetail(id) {
+            try {
+                // Gọi API lấy dữ liệu DTO
+                const response = await fetch(`/api/order/detail/${id}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error("Không tìm thấy đơn hàng này trong hệ thống.");
+                    }
+                    throw new Error("Lỗi khi tải dữ liệu từ máy chủ.");
+                }
+                
+                // Parse kết quả trả về (thường API C# sẽ trả về dạng camelCase)
+                const data = await response.json();
+
+                // 1. Đổ dữ liệu vào khối Thông tin khách hàng
+                document.getElementById('orderIdDisplay').innerText = `ĐH-ĐT-${data.id}`;
+                document.getElementById('customerName').innerText = data.tenKhachHang || "N/A";
+                document.getElementById('customerPhone').innerText = data.sdt || "N/A";
+                document.getElementById('customerAddress').innerText = data.diaChiGiaoHang || "N/A";
+                
+                // Xử lý ngày tháng
+                const dateObj = new Date(data.ngayDat);
+                document.getElementById('orderDate').innerText = dateObj.toLocaleString('vi-VN');
+
+                // Xử lý màu sắc trạng thái
+                const statusSpan = document.getElementById('orderStatus');
+                statusSpan.innerText = data.status || "Chờ xử lý";
+                if (data.status === 'Đã giao hàng') {
+                    statusSpan.style.backgroundColor = '#d4edda';
+                    statusSpan.style.color = '#155724';
+                } else if (data.status === 'Đã hủy') {
+                    statusSpan.style.backgroundColor = '#f8d7da';
+                    statusSpan.style.color = '#721c24';
+                } else {
+                    statusSpan.style.backgroundColor = '#fff3cd';
+                    statusSpan.style.color = '#856404';
+                }
+
+                // Cập nhật tổng tiền
+                document.getElementById('orderTotalAmount').innerText = data.tongTien.toLocaleString('vi-VN') + " VNĐ";
+
+                // 2. Đổ dữ liệu vào bảng danh sách sản phẩm
+                const tbody = document.getElementById('orderItemsData');
+                if (!data.items || data.items.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Đơn hàng này không có sản phẩm nào.</td></tr>`;
+                    return;
+                }
+
+                let htmlString = '';
+                data.items.forEach(item => {
+                    const price = item.unitPrice ? item.unitPrice.toLocaleString('vi-VN') : 0;
+                    const subTotal = (item.unitPrice * item.quantity).toLocaleString('vi-VN');
+                    const imgUrl = item.imageUrl || 'https://via.placeholder.com/60?text=No+Image';
+                    const color = item.mau ? item.mau : '';
+                    const capacity = item.dungLuong ? item.dungLuong : '';
+                    
+                    // Ghép màu và dung lượng
+                    let variantInfo = [color, capacity].filter(Boolean).join(' - ');
+                    if (!variantInfo) variantInfo = "Mặc định";
+
+                    htmlString += `
+                        <tr>
+                            <td><img src="${imgUrl}" alt="${item.tenSanPham}" class="product-img"></td>
+                            <td style="font-weight: 500;">${item.tenSanPham || 'Sản phẩm không xác định'}</td>
+                            <td>${variantInfo}</td>
+                            <td>${price} VNĐ</td>
+                            <td>${item.quantity}</td>
+                            <td style="color: #e5002d; font-weight: bold;">${subTotal} VNĐ</td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = htmlString;
+
+            } catch (error) {
+                console.error("Lỗi:", error);
+                alert(error.message);
+                document.getElementById('orderIdDisplay').innerText = "#Lỗi";
+                document.getElementById('orderItemsData').innerHTML = `<tr><td colspan="6" style="color:red; text-align: center;">Không thể tải dữ liệu chi tiết.</td></tr>`;
+            }
+        }
+    </script>
+}
