@@ -31,10 +31,33 @@ namespace DUANCUAHANGAPPLE.Controllers
             {
                 return BadRequest("Thiếu thông tin");
             }
-            var user = _context.Users
-                .FirstOrDefault(u => u.Email == email && u.Password == password);
-
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            
             if (user == null)
+            {
+                return Unauthorized("Sai email hoặc mật khẩu");
+            }
+
+            bool isPasswordCorrect = false;
+
+            // Kiểm tra xem mật khẩu trong DB đã được băm chưa (BCrypt hash bắt đầu bằng $2)
+            if (user.Password != null && user.Password.StartsWith("$2"))
+            {
+                isPasswordCorrect = BCrypt.Net.BCrypt.Verify(password, user.Password);
+            }
+            else
+            {
+                // Nếu chưa băm (mật khẩu cũ), so sánh trực tiếp
+                if (user.Password == password)
+                {
+                    isPasswordCorrect = true;
+                    // Tự động băm lại mật khẩu và lưu vào DB cho lần sau
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+                    _context.SaveChanges();
+                }
+            }
+
+            if (!isPasswordCorrect)
             {
                 return Unauthorized("Sai email hoặc mật khẩu");
             }
@@ -53,7 +76,12 @@ namespace DUANCUAHANGAPPLE.Controllers
 
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
+                new ClaimsPrincipal(identity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = false, // Cookie sẽ biến mất khi      đóng trình duyệt
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30) // Hết hạn sau 30 phút không hoạt động
+                });
 
             // Rẽ nhánh giao diện dựa trên Role
             if (user.Role == "Admin")
@@ -143,7 +171,7 @@ namespace DUANCUAHANGAPPLE.Controllers
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties { IsPersistent = false });
 
             // Hủy scheme tạm để bảo mật
             await HttpContext.SignOutAsync("ExternalCookies");
@@ -277,7 +305,7 @@ namespace DUANCUAHANGAPPLE.Controllers
                 TempData["ErrorMessage"] = "Email không tồn tại.";
                 return RedirectToAction("Login", "Home");
             }
-            user.Password = newPassword;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.PasswordLastUpdated = DateTime.Now;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

@@ -28,6 +28,11 @@ namespace DUANCUAHANGAPPLE.Controllers
         //----------------USER-------------------
         public IActionResult Index()
         {
+            // Nếu đã đăng nhập và là Admin, tự động chuyển về trang quản trị
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("AdminIndex", "Home", new { area = "Admin" });
+            }
             return View("User/Index");
         }
 
@@ -38,6 +43,10 @@ namespace DUANCUAHANGAPPLE.Controllers
 
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("AdminIndex", "Home", new { area = "Admin" });
+            }
             return View("User/Account/Login");
         }
 

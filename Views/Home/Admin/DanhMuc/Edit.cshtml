@@ -1,45 +1,94 @@
-
 @model DUANCUAHANGAPPLE.ViewModels.DanhMucVM
 @{
     ViewData["Title"] = "Cập nhật danh mục";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+    <style>
+        .form-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1); }
+        .btn-save {
+            height: 48px;
+            border-radius: 8px;
+            font-weight: 600;
+            background: #28a745;
+            border: none;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.2s;
+        }
+        .btn-save:hover { background: #218838; transform: translateY(-1px); }
+        .btn-back {
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            transition: color 0.2s;
+        }
+        .btn-back:hover { color: #212529; }
+    </style>
 }
 
-<div class="main">
-    <div class="header">
-        <a class="btn-back" href="/DanhMuc/Index">
-            &laquo; Quay lại
-        </a>
-        <h3>Sửa danh mục</h3>
-    </div>
-
-    <div class="form-container">
-        <form id="editCategoryForm">
-            <input type="hidden" id="maDanhMuc" value="" />
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <a class="btn-back" href="/Admin/DanhMuc/Index">
+                <i class="fa fa-arrow-left me-2"></i> Quay lại danh sách
+            </a>
             
-            <div class="form-group">
-                <label>Tên danh mục (*)</label>
-                <input  asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required placeholder="Nhập tên danh mục..." />
-                <span asp-validation-for="TenDanhMuc" class="text-danger" style="color:red; font-size:14px;"></span>
+            <div class="form-card">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Cập nhật danh mục</h3>
+                    <p class="text-muted" id="categoryIdDisplay">Sửa đổi thông tin danh mục sản phẩm</p>
+                </div>
+
+                <form id="editCategoryForm">
+                    <input type="hidden" id="maDanhMuc" value="" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Tên danh mục <span class="text-danger">*</span></label>
+                        <input asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required />
+                        <span asp-validation-for="TenDanhMuc" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái hiển thị</label>
+                        <select asp-for="TrangThai" id="trangThai" class="form-select" style="height: 48px; border-radius: 8px;">
+                            <option value="true">Hiển thị (Hoạt động)</option>
+                            <option value="false">Tạm ẩn</option>
+                        </select>
+                    </div>
+
+                    <div id="message" class="alert d-none mb-3" role="alert"></div>
+
+                    <button type="submit" class="btn-save shadow">
+                        <i class="fa fa-check-circle me-2"></i> Cập nhật thay đổi
+                    </button>
+                </form>
             </div>
-
-            <div class="form-group">
-                <label>Trạng thái</label>
-                <select asp-for="TrangThai" id="trangThai" class="form-control">
-                    <option value="true">Hoạt động</option>
-                    <option value="false">Tạm ẩn</option>
-                </select>
-                <span asp-validation-for="TrangThai" class="text-danger" style="color:red; font-size:14px;"></span>
-
-            </div>
-
-            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
-
-            <button type="submit" class="add-btn">Lưu thay đổi</button>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -51,8 +100,8 @@
         function showMessage(text, isSuccess = false) {
             const msgDiv = document.getElementById('message');
             msgDiv.textContent = text;
-            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
-            msgDiv.style.display = 'block';
+            msgDiv.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+            msgDiv.classList.remove('d-none');
         }
 
         document.addEventListener("DOMContentLoaded", async function () {
@@ -60,19 +109,21 @@
                 const response = await fetch(`/api/danhmuc/${categoryId}`);
                 if (!response.ok) throw new Error("Không tìm thấy thông tin");
                 const category = await response.json();
-                doc
+                
                 document.getElementById('maDanhMuc').value = category.maDanhMuc;
                 document.getElementById('tenDanhMuc').value = category.tenDanhMuc;
                 document.getElementById('trangThai').value = category.trangThai ? "true" : "false";
+                document.getElementById('categoryIdDisplay').innerText = `Đang chỉnh sửa danh mục #${category.maDanhMuc}`;
             } catch (error) {
-                console.error("Lỗi:", error);
                 showMessage("Lỗi tải dữ liệu danh mục.");
             }
         });
 
         document.getElementById('editCategoryForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            document.getElementById('message').style.display = 'none'; // Ẩn thông báo lỗi cũ (nếu có) trước khi gửi yêu cầu
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Đang lưu...';
 
             const categoryData = {
                 maDanhMuc: parseInt(document.getElementById('maDanhMuc').value),
@@ -90,13 +141,16 @@
                 if (response.ok) {
                     showMessage('Cập nhật danh mục thành công!', true);
                     setTimeout(() => {
-                        window.location.href = '/DanhMuc/Index';
-                    }, 1000);
+                        window.location.href = '/Admin/DanhMuc/Index';
+                    }, 1200);
                 } else {
-                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại dữ liệu hoặc server.');
+                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại!');
                 }
             } catch (error) {
                 showMessage('Lỗi kết nối tới server!');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-check-circle me-2"></i> Cập nhật thay đổi';
             }
         });
     </script>

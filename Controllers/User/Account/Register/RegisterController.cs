@@ -63,7 +63,7 @@ namespace DUANCUAHANGAPPLE.Controllers
             {
                 FullName = fullname,
                 Email = email,
-                Password = password
+                Password = BCrypt.Net.BCrypt.HashPassword(password) // Băm mật khẩu ở đây
             });
 
             await _context.SaveChangesAsync();

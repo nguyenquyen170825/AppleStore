@@ -1,76 +1,112 @@
-
 @model DUANCUAHANGAPPLE.ViewModels.DanhMucVM
 @{
     ViewData["Title"] = "Thêm danh mục mới";
 }
 
 @section Styles {
-        <link rel="stylesheet" href="~/css/create.css" asp-append-version="true" />
+    <style>
+        .form-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+        }
+        .btn-save {
+            height: 48px;
+            border-radius: 8px;
+            font-weight: 600;
+            background: #0d6efd;
+            border: none;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+            transition: transform 0.2s;
+        }
+        .btn-save:hover { background: #0b5ed7; transform: translateY(-1px); }
+        .btn-back {
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            transition: color 0.2s;
+        }
+        .btn-back:hover { color: #212529; }
+    </style>
 }
 
-<div class="main">
-    <div class="header">
-        <a class="btn-back" href="/DanhMuc/Index">
-            Quay lại
-        </a>
-        <h3>Thêm danh mục mới</h3>
-    </div>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <a class="btn-back" href="/Admin/DanhMuc/Index">
+                <i class="fa fa-arrow-left me-2"></i> Quay lại danh sách
+            </a>
+            
+            <div class="form-card">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Thêm danh mục mới</h3>
+                    <p class="text-muted">Nhập thông tin để tạo danh mục sản phẩm mới</p>
+                </div>
 
-    <div class="form-container">
-        <form id="createDanhMucForm">
-            <div class="form-group">
-                <label>Tên danh mục (*)</label>
-                <input  asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required placeholder="Nhập tên danh mục..." />
-                <span asp-validation-for="TenDanhMuc" class="text-danger" style="color:red; font-size:14px;"></span>
+                <form id="createDanhMucForm">
+                    <div class="mb-3">
+                        <label class="form-label">Tên danh mục <span class="text-danger">*</span></label>
+                        <input asp-for="TenDanhMuc" type="text" id="tenDanhMuc" class="form-control" required placeholder="Ví dụ: iPhone, MacBook..." />
+                        <span asp-validation-for="TenDanhMuc" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái hiển thị</label>
+                        <select asp-for="TrangThai" id="trangThai" class="form-select" style="height: 48px; border-radius: 8px;">
+                            <option value="true">Hiển thị (Hoạt động)</option>
+                            <option value="false">Tạm ẩn</option>
+                        </select>
+                    </div>
+
+                    <div id="message" class="alert d-none mb-3" role="alert"></div>
+
+                    <button type="submit" class="btn-save shadow">
+                        <i class="fa fa-save me-2"></i> Lưu danh mục
+                    </button>
+                </form>
             </div>
-
-            <div class="form-group">
-                <label>Trạng thái</label>
-                <select asp-for="TrangThai" id="trangThai" class="form-control">
-                    <option value="true">Hoạt động</option>
-                    <option value="false">Tạm ẩn</option>
-                </select>
-                <span asp-validation-for="TrangThai" class="text-danger" style="color:red; font-size:14px;"></span>
-            </div>
-
-            <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
-
-            <button type="submit" class="add-btn">Lưu danh mục</button>
-        </form>
+        </div>
     </div>
 </div>
 
- @section Scripts {
+@section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dữ liệu này trong thực tế có thể được gọi từ một API, ví dụ: fetch('/api/lookup/statuses')
-            const statusOptions = [
-                { value: 'true', text: 'Hoạt động' },
-                { value: 'false', text: 'Tạm ẩn' }
-            ];
-
-            const trangThaiSelect = document.getElementById('trangThai');
-            trangThaiSelect.innerHTML = ''; // Xóa các option cũ
-
-            // Thêm các option mới từ dữ liệu
-            statusOptions.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.value;
-                option.textContent = item.text;
-                trangThaiSelect.appendChild(option);
-            });
-        });
-
         function showMessage(text, isSuccess = false) {
             const msgDiv = document.getElementById('message');
             msgDiv.textContent = text;
-            msgDiv.style.color = isSuccess ? '#28a745' : '#e53935';
-            msgDiv.style.display = 'block';
+            msgDiv.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+            msgDiv.classList.remove('d-none');
         }
 
         document.getElementById('createDanhMucForm').addEventListener('submit', async function (e) {
-            e.preventDefault(); // Ngăn form tự động reload trang
-            document.getElementById('message').style.display = 'none';
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Đang lưu...';
 
             const danhMucData = {
                 tenDanhMuc: document.getElementById('tenDanhMuc').value,
@@ -80,25 +116,24 @@
             try {
                 const response = await fetch('/api/danhmuc', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(danhMucData)
                 });
 
                 if (response.ok) {
                     showMessage('Thêm danh mục thành công!', true);
                     setTimeout(() => {
-                        window.location.href = '/DanhMuc/Index'; // Chuyển hướng về trang danh sách
-                    }, 1000);
+                        window.location.href = '/Admin/DanhMuc/Index';
+                    }, 1200);
                 } else {
                     const errorData = await response.json();
-                    console.error("Lỗi Validation:", errorData);
-                    showMessage('Thêm thất bại! Vui lòng kiểm tra lại thông tin.');
+                    showMessage(errorData.message || 'Thêm thất bại! Vui lòng kiểm tra lại.');
                 }
             } catch (error) {
-                console.error('Lỗi khi gọi API:', error);
                 showMessage('Lỗi kết nối đến máy chủ!');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-save me-2"></i> Lưu danh mục';
             }
         });
     </script>

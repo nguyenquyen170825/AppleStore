@@ -2,269 +2,62 @@
     ViewData["Title"] = "Quản lý đơn hàng";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/order.css" asp-append-version="true" />
-}
 <div class="main">
-    <div class="header section-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Đơn hàng cần xác nhận</h3>
-    </div>
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Trạng thái</th>
-                    <th>Tổng tiền</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="pendingOrderData">
-            </tbody>
-        </table>
+    <div class="header mb-4">
+        <h3>Quản lý đơn hàng</h3>
     </div>
 
-    <div class="header section-header">
-        <h3>Thống kê đơn hàng</h3>
-    </div>
-    <div class="stats-container">
-        <div class="stat-box success">
-            <h4 style="color: #2e7d32;">Đã giao thành công</h4>
-            <h2 id="statDelivered" style="color: #1b5e20;">0</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderData"></tbody>
+                </table>
+            </div>
         </div>
-        <div class="stat-box delivering">
-            <h4 style="color: #ef6c00;">Đang giao hàng</h4>
-            <h2 id="statDelivering" style="color: #e65100;">0</h2>
-        </div>
-        <div class="stat-box canceled">
-            <h4 style="color: #c62828;">Đã hủy</h4>
-            <h2 id="statCanceled" style="color: #b71c1c;">0</h2>
-        </div>
-        <div class="stat-box total">
-            <h4 style="color: #1565c0;">Tổng đơn hàng</h4>
-            <h2 id="statTotal" style="color: #0d47a1;">0</h2>
-        </div>
-    </div>
-
-    <div class="header section-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Danh sách tất cả đơn hàng</h3>
-        <div style="display: flex; align-items: center; gap: 10px;">
-
-            <label for="statusFilter" style="font-weight: 600; font-size: 14px;">Lọc trạng thái:</label>
-            <select id="statusFilter" class="form-control" style="width: 200px;" onchange="filterOrders()">
-                <option value="All">Tất cả trạng thái</option>
-                <option value="Chờ xác nhận">Chờ xác nhận</option>
-                <option value="Đang giao hàng">Đang giao hàng</option>
-                <option value="Đã giao hàng">Đã giao hàng</option>
-                <option value="Đã hủy">Đã hủy</option>
-            </select>
-        </div>
-    </div>
-    
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Trạng thái</th>
-                    <th>Tổng tiền</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="allOrderData">
-            </tbody>
-        </table>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Biến toàn cục để lưu danh sách đơn hàng, phục vụ cho việc lọc offline
-        let allOrdersList = [];
-
-        document.addEventListener("DOMContentLoaded", async function () {
-            await loadOrders();
+        document.addEventListener("DOMContentLoaded", function() {
+            loadOrders();
         });
 
         async function loadOrders() {
             try {
-                const response = await fetch('/api/order');
-                if (!response.ok) throw new Error("Lỗi tải dữ liệu");
+                const res = await fetch('/api/order');
+                if (!res.ok) throw new Error("Không thể tải đơn hàng");
+                const orders = await res.json();
+                const tbody = document.getElementById('orderData');
                 
-                const orders = await response.json();
-
-                if (!orders || orders.length === 0) {
-                    document.getElementById('pendingOrderData').innerHTML = '<tr><td colspan="8">Không có đơn hàng nào cần xác nhận.</td></tr>';
-                    document.getElementById('allOrderData').innerHTML = '<tr><td colspan="8">Chưa có đơn hàng nào.</td></tr>';
-                    return;
-                }
-
-                // Lưu vào biến toàn cục
-                allOrdersList = orders;
-
-                const pendingOrders = [];
-                let countDelivered = 0;
-                let countDelivering = 0;
-                let countCanceled = 0;
-
-                for (let i = 0; i < orders.length; i++) {
-                    const status = orders[i].status;
-                    
-                    if (status === 'Chờ xác nhận') {
-                        pendingOrders.push(orders[i]);
-                    } else if (status === 'Đã giao hàng') {
-                        countDelivered++;
-                    } else if (status === 'Đang giao hàng') {
-                        countDelivering++;
-                    } else if (status === 'Đã hủy') {
-                        countCanceled++;
-                    }
-                }
-
-                document.getElementById('statDelivered').innerText = countDelivered;
-                document.getElementById('statDelivering').innerText = countDelivering;
-                document.getElementById('statCanceled').innerText = countCanceled;
-                document.getElementById('statTotal').innerText = orders.length;
-
-                renderTable(pendingOrders, 'pendingOrderData', 'Không có đơn hàng nào cần xác nhận.');
-                
-                // Gọi hàm lọc để render bảng dưới cùng (phòng trường hợp đang chọn sẵn filter)
-                filterOrders();
-
-            } catch (error) {
-                console.error("Lỗi:", error);
-                const errorRow = `<tr><td colspan="8" style="color:red; text-align: center;">Lỗi tải dữ liệu.</td></tr>`;
-                document.getElementById('pendingOrderData').innerHTML = errorRow;
-                document.getElementById('allOrderData').innerHTML = errorRow;
-            }
-        }
-
-        // Hàm xử lý lọc dữ liệu
-        function filterOrders() {
-            const selectedStatus = document.getElementById('statusFilter').value;
-            let filteredData = allOrdersList;
-
-            // Nếu không phải chọn 'Tất cả' thì lọc mảng
-            if (selectedStatus !== 'All') {
-                filteredData = allOrdersList.filter(o => o.status === selectedStatus);
-            }
-
-            renderTable(filteredData, 'allOrderData', 'Không có đơn hàng nào khớp với trạng thái này.');
-        }
-
-        function renderTable(orderArray, targetTbodyId, emptyMessage) {
-            const tbody = document.getElementById(targetTbodyId);
-            
-            if (!orderArray || orderArray.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">${emptyMessage}</td></tr>`;
-                return;
-            }
-
-            let htmlString = '';
-            for (let i = 0; i < orderArray.length; i++) {
-                const o = orderArray[i];
-                const customerName = (o.user && o.user.fullName) ? o.user.fullName : (o.fullName || 'N/A');
-                const orderDate = o.orderDate ? new Date(o.orderDate).toLocaleDateString('vi-VN') : 'N/A';
-                const totalAmount = o.totalAmount ? o.totalAmount.toLocaleString('vi-VN') : 0;
-                
-                // --- XÁC ĐỊNH NÚT CHUYỂN TRẠNG THÁI TIẾP THEO ---
-                let nextStatusBtn = '';
-                let cancelBtn = '';
-
-                if (o.status === 'Chờ xác nhận') {
-                    nextStatusBtn = `<button class="btn btn-info btn-sm" onclick="updateOrderStatus(${o.orderId}, 'Đang giao hàng')">Xác nhận</button>`;
-                    cancelBtn = `<button class="btn btn-danger btn-sm" onclick="updateOrderStatus(${o.orderId}, 'Đã hủy')">Hủy</button>`;
-                } else if (o.status === 'Đang giao hàng') {
-                    nextStatusBtn = `<button class="btn btn-success btn-sm" onclick="updateOrderStatus(${o.orderId}, 'Đã giao hàng')">Đã giao</button>`;
-                }
-                
-                // Nếu trạng thái là 'Đã giao hàng' hoặc 'Đã hủy', không hiển thị nút chuyển tiếp
-                const statusControls = (o.status === 'Đã giao hàng' || o.status === 'Đã hủy') 
-                    ? `<span style="font-weight:bold;">${o.status}</span>` 
-                    : `<div style="display: flex; gap: 5px;">${nextStatusBtn} ${cancelBtn}</div> <div style="margin-top: 5px; font-size: 12px; color: gray;"> ${o.status}</div>`;
-
-                htmlString += `
+                tbody.innerHTML = orders.map(o => `
                     <tr>
-                        <td> ĐH-ĐT-${o.orderId}</td>
-                        <td>${customerName}</td>
-                        <td>${orderDate}</td>
-                        <td>${o.shippingAddress || 'N/A'}</td>
-                        <td>${o.phoneNumber || 'N/A'}</td>
+                        <td><strong>${o.maDonHang || "#" + o.id}</strong></td>
+                        <td>${o.hoTen}</td>
+                        <td>${new Date(o.ngayThanhToan).toLocaleDateString('vi-VN')}</td>
+                        <td class="text-danger fw-bold">${o.tongTien.toLocaleString()}đ</td>
+                        <td><span class="badge bg-secondary">${o.trangThai}</span></td>
                         <td>
-                            ${statusControls}
-                        </td>
-                        <td style="color: red; font-weight: bold;">${totalAmount} VNĐ</td>
-                        <td>
-                            <button class="detail-btn" onclick="location.href='/Order/Detail/${o.orderId}'" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn-edit" onclick="location.href='/Order/Edit/${o.orderId}'" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button class="btn-delete" onclick="deleteOrder(${o.orderId})" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="location.href='/Admin/Order/Detail/${o.id}'">
+                                <i class="fa fa-eye"></i> Chi tiết
+                            </button>
                         </td>
                     </tr>
-                `;
-            }
-            tbody.innerHTML = htmlString;
-        }
-
-        async function updateOrderStatus(orderId, newStatus) {
-            if (!confirm(`Chuyển trạng thái đơn hàng sang "${newStatus}"?`)) {
-                return;
-            }
-
-            // ✅ SỬA LỖI: Tìm đơn hàng trong danh sách đã tải về, không cần fetch lại
-            const orderToUpdate = allOrdersList.find(o => o.orderId === orderId);
-
-            if (!orderToUpdate) {
-                alert("Lỗi: Không tìm thấy thông tin đơn hàng để cập nhật.");
-                return;
-            }
-
-            // Cập nhật trạng thái mới vào object
-            orderToUpdate.status = newStatus;
-
-            try {
-                const response = await fetch(`/api/order/${orderId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderToUpdate) // Gửi toàn bộ object đã cập nhật lên server
-                });
-
-                if (response.ok) {
-                    // Tải lại toàn bộ danh sách để giao diện được đồng bộ
-                    await loadOrders();
-                } else {
-                    alert("Cập nhật thất bại!");
-                }
+                `).join('');
             } catch (error) {
-                console.error("Lỗi:", error);
-                alert("Lỗi kết nối khi cập nhật trạng thái.");
-            }
-        }
-
-        async function deleteOrder(id) {
-            if (!confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) return;
-
-            try {
-                const response = await fetch(`/api/order/${id}`, { 
-                    method: 'DELETE' 
-                });
-
-                if (response.ok) {
-                    alert("Xóa đơn hàng thành công!");
-                    await loadOrders(); 
-                } else {
-                    alert("Xóa thất bại!");
-                }
-            } catch (error) {
-                console.error("Lỗi xóa:", error);
-                alert("Lỗi kết nối khi xóa.");
+                console.error(error);
+                document.getElementById('orderData').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Lỗi tải dữ liệu đơn hàng</td></tr>';
             }
         }
     </script>
