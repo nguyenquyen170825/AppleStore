@@ -1,27 +1,27 @@
-?@{
-    ViewData["Title"] = "Qu?n l˝ danh m?c";
+@{
+    ViewData["Title"] = "Qu·∫£n l√Ω danh m·ª•c";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/danhmuc.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/home/Admin/danhmuc.css" asp-append-version="true" />
 }
 
 <div class="main">
     <div class="header">
-        <h3>Qu?n l˝ danh m?c</h3>
-        <a class="add-btn" href="/DanhMuc/Create">
-            + ThÍm danh m?c m?i
+        <h3>Qu·∫£n l√Ω danh m·ª•c</h3>
+        <a class="add-btn" href="/Admin/DanhMuc/Create">
+            + Th√™m danh m·ª•c m·ªõi
         </a>
     </div>
     <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="TÏm tÍn danh m?c..." />
+        <input type="text" id="searchInput" placeholder="T√¨m t√™n danh m·ª•c..." />
         <select id="statusFilter">
-            <option value="">T?t c? tr?ng th·i</option>
-            <option value="true">Ho?t d?ng</option>
-            <option value="false">T?m ?n</option>
+            <option value="">T·∫•t c·∫£ tr·∫°ng th√°i</option>
+            <option value="true">Ho·∫°t ƒë·ªông</option>
+            <option value="false">T·∫°m ·∫©n</option>
         </select>
-        <button class="btn-search">TÏm</button>
-        <button class="btn-reset">L‡m m?i</button>
+        <button class="btn-search">T√¨m</button>
+        <button class="btn-reset">L√†m m·ªõi</button>
     </div>
 
     <div id="message" style="margin-bottom: 15px; display: none; font-weight: 500;"></div>
@@ -29,10 +29,10 @@
     <table>
         <thead>
             <tr>
-                <th>M„ danh m?c</th>
-                <th>TÍn danh m?c</th>
-                <th>Tr?ng th·i</th>
-                <th>Thao t·c</th>
+                <th>M√£ danh m·ª•c</th>
+                <th>T√™n danh m·ª•c</th>
+                <th>Tr·∫°ng th√°i</th>
+                <th>Thao t√°c</th>
             </tr>
         </thead>
         <tbody id="danhMucData">
@@ -50,25 +50,22 @@
             setTimeout(() => { msgDiv.style.display = 'none'; }, 3000);
         }
 
-        // H‡m load d? li?u danh m?c
         async function fetchDanhMucs() {
             try {
                 const searchKeyword = document.getElementById('searchInput').value.trim().toLowerCase();
                 const statusValue = document.getElementById('statusFilter').value;
 
                 const response = await fetch('/api/danhmuc');
-                if (!response.ok) throw new Error(`L?i HTTP: ${response.status}`);
+                if (!response.ok) throw new Error(`L·ªói HTTP: ${response.status}`);
 
                 let danhmucs = await response.json();
 
-                // L?c theo t? khÛa tÏm ki?m (tÍn danh m?c)
                 if (searchKeyword) {
                     danhmucs = danhmucs.filter(d => 
                         (d.tenDanhMuc && d.tenDanhMuc.toLowerCase().includes(searchKeyword))
                     );
                 }
 
-                // L?c theo tr?ng th·i
                 if (statusValue !== "") {
                     const isStatusTrue = statusValue === "true";
                     danhmucs = danhmucs.filter(d => d.trangThai === isStatusTrue);
@@ -77,24 +74,24 @@
                 const tableBody = document.getElementById('danhMucData');
 
                 if (!danhmucs || danhmucs.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Chua cÛ danh m?c n‡o!</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Ch∆∞a c√≥ danh m·ª•c n√†o!</td></tr>';
                     return;
                 }
 
                 tableBody.innerHTML = danhmucs.map(d => {
                     return `
                     <tr>
-                        <td>${d.maDanhMuc}</td>
-                        <td><strong>${d.tenDanhMuc || "KhÙng tÍn"}</strong></td>
+                        <td>#${d.maDanhMuc}</td>
+                        <td><strong>${d.tenDanhMuc || "Kh√¥ng t√™n"}</strong></td>
                         <td>
-                           <span class="badge ${d.trangThai ? "badge-success" : "badge-danger"}">
-                                ${d.trangThai ? "Ho?t d?ng" : "T?m ?n"}
+                           <span class="badge ${d.trangThai ? "bg-success" : "bg-danger"}">
+                                ${d.trangThai ? "Ho·∫°t ƒë·ªông" : "T·∫°m ·∫©n"}
                            </span>
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" onclick="location.href='/DanhMuc/Edit/${d.maDanhMuc}'"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn-delete" onclick="deleteDanhMuc(${d.maDanhMuc})"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-primary btn-sm me-1" onclick="location.href='/Admin/DanhMuc/Edit/${d.maDanhMuc}'"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="deleteDanhMuc(${d.maDanhMuc})"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -102,46 +99,35 @@
                 }).join('');
 
             } catch (error) {
-                console.error("L?i:", error);
+                console.error("L·ªói:", error);
                 document.getElementById('danhMucData').innerHTML =
-                    `<tr><td colspan="4" style="color:red; text-align: center;">L?i k?t n?i API. Vui lÚng ki?m tra l?i server.</td></tr>`;
+                    `<tr><td colspan="4" style="color:red; text-align: center;">L·ªói k·∫øt n·ªëi API. Vui l√≤ng ki·ªÉm tra l·∫°i server.</td></tr>`;
             }
         }
 
-        // H‡m xÛa danh m?c
         async function deleteDanhMuc(id) {
-            if (!confirm("X·c nh?n xÛa danh m?c n‡y?")) return;
+            if (!confirm("X√°c nh·∫≠n x√≥a danh m·ª•c n√†y?")) return;
             try {
                 const response = await fetch(`/api/danhmuc/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    showMessage("–„ xÛa th‡nh cÙng!", true);
-                    fetchDanhMucs(); // T? d?ng load l?i b?ng sau khi xÛa
+                    showMessage("ƒê√£ x√≥a th√†nh c√¥ng!", true);
+                    fetchDanhMucs();
                 } else {
-                    // –?c n?i dung l?i chi ti?t do Backend g?i v?
                     const errorData = await response.json();
-                    showMessage("XÛa th?t b?i: " + (errorData.detail || errorData.message || "L?i khÙng x·c d?nh"));
+                    showMessage("X√≥a th·∫•t b·∫°i: " + (errorData.detail || errorData.message || "L·ªói kh√¥ng x√°c ƒë·ªãnh"));
                 }
             } catch (error) {
-                console.error("L?i xÛa:", error);
-                showMessage("L?i k?t n?i ho?c s? c? m?ng!");
+                console.error("L·ªói x√≥a:", error);
+                showMessage("L·ªói k·∫øt n·ªëi ho·∫∑c s·ª± c·ªë m·∫°ng!");
             }
         }
 
-        // T? d?ng ch?y h‡m fetchDanhMucs khi trang load xong
         document.addEventListener("DOMContentLoaded", fetchDanhMucs);
-
-        // L?ng nghe s? ki?n click v‡o n˙t TÏm ki?m
         document.querySelector('.btn-search').addEventListener('click', fetchDanhMucs);
-
-        // L?ng nghe s? ki?n gı phÌm Enter trong Ù tÏm ki?m
         document.getElementById('searchInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') fetchDanhMucs();
         });
-
-        // L?ng nghe s? ki?n thay d?i thanh ch?n Tr?ng th·i
         document.getElementById('statusFilter').addEventListener('change', fetchDanhMucs);
-
-        // X? l˝ n˙t L‡m m?i (Reset)
         document.querySelector('.btn-reset').addEventListener('click', function () {
             document.getElementById('searchInput').value = '';
             document.getElementById('statusFilter').value = '';

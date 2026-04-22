@@ -24,8 +24,8 @@
             <!-- Sidebar -->
             <div class="col-md-2 admin-sidebar p-0">
                 <div class="text-center mb-4">
-                    <h4 class="fw-bold">APPLE STORE</h4>
-                    <span class="badge bg-primary">Quản trị viên</span>
+                    <h4 class="fw-bold text-info"><i class="fa fa-apple-whole me-2"></i>APPLE STORE</h4>
+                    <span class="badge bg-gradient bg-primary">QUẢN TRỊ VIÊN</span>
                 </div>
                 <a href="/Admin/Home/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                     <i class="fa fa-tachometer-alt me-2"></i> Dashboard
@@ -48,8 +48,10 @@
                 <a href="/" class="text-warning mt-5">
                     <i class="fa fa-arrow-left me-2"></i> Về trang chủ
                 </a>
-                <form asp-controller="Login" asp-action="Logout" method="post" class="p-3">
-                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">Đăng xuất</button>
+                <form asp-controller="Login" asp-action="Logout" asp-area="" method="post" class="p-3">
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                        <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+                    </button>
                 </form>
             </div>
 
@@ -58,7 +60,7 @@
                 <div class="admin-header d-flex justify-content-between align-items-center">
                     <h5 class="m-0 fw-bold text-secondary">@ViewData["Title"]</h5>
                     <div class="user-info">
-                        <span>Chào, <strong>Admin</strong></span>
+                        <span>Chào, <strong>@(User.FindFirst("FullName")?.Value ?? "Quản trị viên")</strong></span>
                     </div>
                 </div>
                 <div class="content-wrapper">
